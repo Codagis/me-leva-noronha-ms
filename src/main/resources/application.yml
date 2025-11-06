@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: melevanoronha
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/me-leva-noronha
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: me-leva-noronha-secret-key-minimo-256-bits-para-seguranca-jwt-token-apenas-desenvolvimento
+  expiration: 28800 
+  refresh-expiration: 604800
+

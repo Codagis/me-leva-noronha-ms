@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "me-leva-noronha-api",
 		"name": "Me Leva Noronha API",
-		"description": "Collection para autenticação, gerenciamento de usuários e tabela de marés",
+		"description": "Collection para autenticação, gerenciamento de usuários, tabela de marés e dicas",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -227,6 +227,177 @@
 				}
 			],
 			"description": "Endpoints relacionados à tabela de marés"
+		},
+		{
+			"name": "Dicas",
+			"item": [
+				{
+					"name": "Listar Dicas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/dicas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"dicas"
+							]
+						},
+						"description": "Endpoint para listar todas as dicas cadastradas"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Dica por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/dicas/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"dicas",
+								"1"
+							]
+						},
+						"description": "Endpoint para buscar uma dica específica pelo identificador"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Imagem da Dica",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/dicas/1/imagem",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"dicas",
+								"1",
+								"imagem"
+							]
+						},
+						"description": "Endpoint para obter a imagem armazenada no banco de uma dica"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Ícone da Dica",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/dicas/1/icone",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"dicas",
+								"1",
+								"icone"
+							]
+						},
+						"description": "Endpoint para obter o ícone armazenado no banco de uma dica"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Dica",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "tag",
+									"value": "passeio",
+									"type": "text"
+								},
+								{
+									"key": "titulo",
+									"value": "Passeio de Barco",
+									"type": "text"
+								},
+								{
+									"key": "descricao",
+									"value": "Dica de passeio de barco para ver os golfinhos.",
+									"type": "text"
+								},
+								{
+									"key": "linkWhatsapp",
+									"value": "https://wa.me/5584999999999",
+									"type": "text"
+								},
+								{
+									"key": "imagem",
+									"type": "file",
+									"src": ""
+								},
+								{
+									"key": "icone",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/dicas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"dicas"
+							]
+						},
+						"description": "Endpoint para cadastrar uma nova dica com upload de imagem e ícone"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados ao gerenciamento de dicas"
 		}
 	],
 	"variable": [

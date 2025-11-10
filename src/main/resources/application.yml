@@ -26,3 +26,4 @@ jwt:
   expiration: 28800 
   refresh-expiration: 604800
 
+

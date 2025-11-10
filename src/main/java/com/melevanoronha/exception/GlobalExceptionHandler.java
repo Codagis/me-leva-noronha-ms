@@ -1,5 +1,6 @@
 package com.melevanoronha.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,13 +14,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Handler global de exceções da API.
- * Centraliza o tratamento de exceções e formata respostas de erro padronizadas.
- * 
- * @author Sistema Me Leva Noronha
- * @version 1.0
- */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -40,6 +34,17 @@ public class GlobalExceptionHandler {
         response.put("errors", errors);
 
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleEntityNotFoundException(EntityNotFoundException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.NOT_FOUND.value());
+        response.put("error", "Recurso não encontrado");
+        response.put("message", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -75,7 +80,3 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
-
-
-
-

@@ -1,8 +1,8 @@
 package com.melevanoronha.service;
 
-import com.melevanoronha.dto.TabelaMareRequest;
-import com.melevanoronha.dto.TabelaMareResponse;
-import com.melevanoronha.model.TabelaMare;
+import com.melevanoronha.dto.request.TabelaMareRequest;
+import com.melevanoronha.dto.response.TabelaMareResponse;
+import com.melevanoronha.model.TabuaMare;
 import com.melevanoronha.repository.TabelaMareRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class TabelaMareService {
 
     @Transactional(readOnly = true)
     public List<TabelaMareResponse> listarPorData(LocalDate data) {
-        List<TabelaMare> registros = tabelaMareRepository.findByData(data);
+        List<TabuaMare> registros = tabelaMareRepository.findByData(data);
         return registros.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
@@ -34,25 +34,25 @@ public class TabelaMareService {
 
     @Transactional
     public TabelaMareResponse cadastrar(TabelaMareRequest request) {
-        if (tabelaMareRepository.existsByDataAndHorario(request.getData(), request.getHorario())) {
+        if (tabelaMareRepository.existsByDataAndHorario(request.data(), request.horario())) {
             throw new RuntimeException("Já existe um registro para esta data e horário");
         }
 
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(request.getData());
-        tabelaMare.setHorario(request.getHorario());
-        tabelaMare.setMetro(request.getMetro());
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(request.data());
+        tabuaMare.setHorario(request.horario());
+        tabuaMare.setMetro(request.metro());
 
-        TabelaMare saved = tabelaMareRepository.save(tabelaMare);
+        TabuaMare saved = tabelaMareRepository.save(tabuaMare);
         return toResponse(saved);
     }
 
-    private TabelaMareResponse toResponse(TabelaMare tabelaMare) {
+    private TabelaMareResponse toResponse(TabuaMare tabuaMare) {
         return TabelaMareResponse.builder()
-                .id(tabelaMare.getId())
-                .data(tabelaMare.getData())
-                .horario(tabelaMare.getHorario())
-                .metro(tabelaMare.getMetro())
+                .id(tabuaMare.getId())
+                .data(tabuaMare.getData())
+                .horario(tabuaMare.getHorario())
+                .metro(tabuaMare.getMetro())
                 .build();
     }
 }

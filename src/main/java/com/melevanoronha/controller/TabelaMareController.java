@@ -1,7 +1,7 @@
 package com.melevanoronha.controller;
 
-import com.melevanoronha.dto.TabelaMareRequest;
-import com.melevanoronha.dto.TabelaMareResponse;
+import com.melevanoronha.dto.request.TabelaMareRequest;
+import com.melevanoronha.dto.response.TabelaMareResponse;
 import com.melevanoronha.service.TabelaMareService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.melevanoronha.controller;
 
-import com.melevanoronha.dto.DicaRequest;
-import com.melevanoronha.dto.DicaResponse;
+import com.melevanoronha.dto.request.DicaRequest;
+import com.melevanoronha.dto.response.DicaResponse;
 import com.melevanoronha.service.DicaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -67,8 +67,8 @@ public class DicaController {
 
     private DicaResponse completarLinks(DicaResponse response) {
         String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        response.setLinkImagem(baseUrl + response.getLinkImagem());
-        response.setLinkIcone(baseUrl + response.getLinkIcone());
-        return response;
+        return response
+                .withLinkImagem(baseUrl + response.linkImagem())
+                .withLinkIcone(baseUrl + response.linkIcone());
     }
 }

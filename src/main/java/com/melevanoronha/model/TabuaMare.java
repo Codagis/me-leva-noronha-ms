@@ -11,23 +11,24 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Entidade responsável pelo gerenciamento da tabela de marés.
- * Armazena informações sobre horários e alturas das marés por data.
- * 
+ * Entidade responsável por armazenar registros de marés, com horários e alturas
+ * associados a cada data disponível para consulta no sistema.
+ *
  * @author Sistema Me Leva Noronha
  * @version 1.0
  */
 @Entity
 @Table(name = "tabuamare",
        indexes = {
-           @Index(name = "idx_tabuamare_data", columnList = "data")
+           @Index(name = "idx_tabuamare_data", columnList = "data"),
+           @Index(name = "idx_tabuamare_data_horario", columnList = "data, horario")
        })
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class TabelaMare {
+public class TabuaMare {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,7 +71,7 @@ public class TabelaMare {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TabelaMare that = (TabelaMare) o;
+        TabuaMare that = (TabuaMare) o;
         return id != null && id.equals(that.id);
     }
 

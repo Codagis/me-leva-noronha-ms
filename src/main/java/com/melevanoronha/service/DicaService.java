@@ -1,7 +1,7 @@
 package com.melevanoronha.service;
 
-import com.melevanoronha.dto.DicaRequest;
-import com.melevanoronha.dto.DicaResponse;
+import com.melevanoronha.dto.request.DicaRequest;
+import com.melevanoronha.dto.response.DicaResponse;
 import com.melevanoronha.model.Dica;
 import com.melevanoronha.repository.DicaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -46,14 +46,14 @@ public class DicaService {
     @Transactional
     public DicaResponse cadastrar(DicaRequest request) {
         Dica dica = new Dica();
-        dica.setTag(request.getTag());
-        dica.setTitulo(request.getTitulo());
-        dica.setDescricao(request.getDescricao());
-        dica.setLinkWhatsapp(request.getLinkWhatsapp());
-        dica.setImagemContentType(definirContentType(request.getImagem()));
-        dica.setIconeContentType(definirContentType(request.getIcone()));
-        dica.setImagemDados(obterBytes(request.getImagem()));
-        dica.setIconeDados(obterBytes(request.getIcone()));
+        dica.setTag(request.tag());
+        dica.setTitulo(request.titulo());
+        dica.setDescricao(request.descricao());
+        dica.setLinkWhatsapp(request.linkWhatsapp());
+        dica.setImagemContentType(definirContentType(request.imagem()));
+        dica.setIconeContentType(definirContentType(request.icone()));
+        dica.setImagemDados(obterBytes(request.imagem()));
+        dica.setIconeDados(obterBytes(request.icone()));
         dica.setLinkImagem("");
         dica.setLinkIcone("");
 
@@ -64,15 +64,15 @@ public class DicaService {
     }
 
     private DicaResponse toResponse(Dica dica) {
-        return DicaResponse.builder()
-                .id(dica.getId())
-                .tag(dica.getTag())
-                .titulo(dica.getTitulo())
-                .descricao(dica.getDescricao())
-                .linkWhatsapp(dica.getLinkWhatsapp())
-                .linkImagem(dica.getLinkImagem())
-                .linkIcone(dica.getLinkIcone())
-                .build();
+        return new DicaResponse(
+                dica.getId(),
+                dica.getTag(),
+                dica.getTitulo(),
+                dica.getDescricao(),
+                dica.getLinkWhatsapp(),
+                dica.getLinkImagem(),
+                dica.getLinkIcone()
+        );
     }
 
     private byte[] obterBytes(MultipartFile file) {

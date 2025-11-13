@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -19,8 +20,19 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
+/**
+ * Entidade responsável por armazenar dicas turísticas, incluindo mídias e canais
+ * de contato para divulgação no aplicativo Me Leva Noronha.
+ *
+ * @author Sistema Me Leva Noronha
+ * @version 1.0
+ */
 @Entity
-@Table(name = "dica")
+@Table(name = "dica",
+        indexes = {
+                @Index(name = "idx_dica_tag", columnList = "tag"),
+                @Index(name = "idx_dica_titulo", columnList = "titulo")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

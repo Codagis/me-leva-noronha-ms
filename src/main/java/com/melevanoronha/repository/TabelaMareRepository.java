@@ -1,6 +1,6 @@
 package com.melevanoronha.repository;
 
-import com.melevanoronha.model.TabelaMare;
+import com.melevanoronha.model.TabuaMare;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,16 +16,16 @@ import java.util.List;
  * @version 1.0
  */
 @Repository
-public interface TabelaMareRepository extends JpaRepository<TabelaMare, Long> {
+public interface TabelaMareRepository extends JpaRepository<TabuaMare, Long> {
 
     @Query("SELECT t FROM TabelaMare t WHERE t.data = :data ORDER BY t.horario ASC")
-    List<TabelaMare> findByData(@Param("data") LocalDate data);
+    List<TabuaMare> findByData(@Param("data") LocalDate data);
 
     @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END FROM TabelaMare t WHERE t.data = :data AND t.horario = :horario")
     boolean existsByDataAndHorario(@Param("data") LocalDate data, @Param("horario") String horario);
 
     @Query("SELECT t FROM TabelaMare t WHERE t.data = :data AND t.horario = :horario")
-    TabelaMare findByDataAndHorario(@Param("data") LocalDate data, @Param("horario") String horario);
+    TabuaMare findByDataAndHorario(@Param("data") LocalDate data, @Param("horario") String horario);
 
     boolean existsByData(LocalDate data);
 }

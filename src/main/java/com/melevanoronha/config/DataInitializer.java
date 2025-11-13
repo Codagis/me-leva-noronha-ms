@@ -1,6 +1,6 @@
 package com.melevanoronha.config;
 
-import com.melevanoronha.model.TabelaMare;
+import com.melevanoronha.model.TabuaMare;
 import com.melevanoronha.repository.TabelaMareRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroJaneiro(registros, 1, "00:01", "0.28M");
         adicionarRegistroJaneiro(registros, 1, "06:14", "2.10M");
@@ -212,7 +212,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroFevereiro(registros, 1, "01:04", "0.11M");
         adicionarRegistroFevereiro(registros, 1, "07:14", "2.32M");
@@ -360,7 +360,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroMarco(registros, 1, "06:08", "2.51M");
         adicionarRegistroMarco(registros, 1, "12:12", "0.04M");
@@ -522,7 +522,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroAbril(registros, 1, "00:59", "0.10M");
         adicionarRegistroAbril(registros, 1, "07:10", "2.46M");
@@ -680,7 +680,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroMaio(registros, 1, "01:27", "0.36M");
         adicionarRegistroMaio(registros, 1, "07:44", "2.29M");
@@ -843,7 +843,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroJunho(registros, 1, "03:01", "0.65M");
         adicionarRegistroJunho(registros, 1, "09:21", "2.08M");
@@ -1001,7 +1001,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroJulho(registros, 1, "03:10", "0.64M");
         adicionarRegistroJulho(registros, 1, "09:31", "2.07M");
@@ -1164,7 +1164,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroAgosto(registros, 1, "04:01", "0.75M");
         adicionarRegistroAgosto(registros, 1, "10:14", "1.81M");
@@ -1327,7 +1327,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroSetembro(registros, 1, "05:47", "0.87M");
         adicionarRegistroSetembro(registros, 1, "12:04", "1.58M");
@@ -1485,7 +1485,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroOutubro(registros, 1, "06:31", "0.83M");
         adicionarRegistroOutubro(registros, 1, "12:55", "1.65M");
@@ -1647,7 +1647,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroNovembro(registros, 1, "01:12", "2.01M");
         adicionarRegistroNovembro(registros, 1, "07:38", "0.54M");
@@ -1805,7 +1805,7 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        List<TabelaMare> registros = new ArrayList<>();
+        List<TabuaMare> registros = new ArrayList<>();
 
         adicionarRegistroDezembro(registros, 1, "01:25", "2.13M");
         adicionarRegistroDezembro(registros, 1, "07:46", "0.43M");
@@ -1966,100 +1966,100 @@ public class DataInitializer implements CommandLineRunner {
         return tabelaMareRepository.existsByData(LocalDate.of(ano, mes, 1));
     }
 
-    private void adicionarRegistroJaneiro(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 1, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroJaneiro(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 1, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroFevereiro(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 2, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroFevereiro(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 2, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroMarco(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 3, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroMarco(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 3, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroAbril(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 4, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroAbril(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 4, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroMaio(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 5, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroMaio(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 5, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroJunho(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 6, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroJunho(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 6, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroJulho(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 7, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroJulho(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 7, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroAgosto(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 8, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroAgosto(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 8, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroSetembro(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 9, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroSetembro(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 9, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroOutubro(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 10, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroOutubro(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 10, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroNovembro(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 11, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroNovembro(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 11, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 
-    private void adicionarRegistroDezembro(List<TabelaMare> registros, int dia, String horario, String metro) {
-        TabelaMare tabelaMare = new TabelaMare();
-        tabelaMare.setData(LocalDate.of(2025, 12, dia));
-        tabelaMare.setHorario(horario);
-        tabelaMare.setMetro(metro);
-        registros.add(tabelaMare);
+    private void adicionarRegistroDezembro(List<TabuaMare> registros, int dia, String horario, String metro) {
+        TabuaMare tabuaMare = new TabuaMare();
+        tabuaMare.setData(LocalDate.of(2025, 12, dia));
+        tabuaMare.setHorario(horario);
+        tabuaMare.setMetro(metro);
+        registros.add(tabuaMare);
     }
 }
 

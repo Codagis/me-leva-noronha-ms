@@ -1,9 +1,9 @@
 package com.melevanoronha.controller;
 
-import com.melevanoronha.dto.AuthResponse;
-import com.melevanoronha.dto.LoginRequest;
-import com.melevanoronha.dto.RefreshTokenRequest;
-import com.melevanoronha.dto.RegisterRequest;
+import com.melevanoronha.dto.response.AuthResponse;
+import com.melevanoronha.dto.request.LoginRequest;
+import com.melevanoronha.dto.request.RefreshTokenRequest;
+import com.melevanoronha.dto.request.RegisterRequest;
 import com.melevanoronha.model.Usuario;
 import com.melevanoronha.service.AuthenticationService;
 import jakarta.validation.Valid;
@@ -45,7 +45,7 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
-        authenticationService.revokeToken(request.getRefreshToken());
+        authenticationService.revokeToken(request.refreshToken());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

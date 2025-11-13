@@ -1,4 +1,4 @@
-package com.melevanoronha.dto;
+package com.melevanoronha.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

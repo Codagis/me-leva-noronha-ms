@@ -1,9 +1,9 @@
 package com.melevanoronha.service;
 
-import com.melevanoronha.dto.AuthResponse;
-import com.melevanoronha.dto.LoginRequest;
-import com.melevanoronha.dto.RefreshTokenRequest;
-import com.melevanoronha.dto.RegisterRequest;
+import com.melevanoronha.dto.response.AuthResponse;
+import com.melevanoronha.dto.request.LoginRequest;
+import com.melevanoronha.dto.request.RefreshTokenRequest;
+import com.melevanoronha.dto.request.RegisterRequest;
 import com.melevanoronha.model.RefreshToken;
 import com.melevanoronha.model.Usuario;
 import com.melevanoronha.repository.RefreshTokenRepository;
@@ -39,19 +39,19 @@ public class AuthenticationService {
 
     @Transactional
     public Usuario register(RegisterRequest request) {
-        if (usuarioRepository.existsByUsername(request.getUsername())) {
+        if (usuarioRepository.existsByUsername(request.username())) {
             throw new RuntimeException("Username já está em uso");
         }
 
-        if (usuarioRepository.existsByEmail(request.getEmail())) {
+        if (usuarioRepository.existsByEmail(request.email())) {
             throw new RuntimeException("Email já está em uso");
         }
 
         Usuario usuario = new Usuario();
-        usuario.setNome(request.getNome());
-        usuario.setUsername(request.getUsername());
-        usuario.setEmail(request.getEmail());
-        usuario.setSenha(passwordEncoder.encode(request.getSenha()));
+        usuario.setNome(request.nome());
+        usuario.setUsername(request.username());
+        usuario.setEmail(request.email());
+        usuario.setSenha(passwordEncoder.encode(request.senha()));
 
         return usuarioRepository.save(usuario);
     }
@@ -60,17 +60,17 @@ public class AuthenticationService {
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getSenha()
+                        request.username(),
+                        request.senha()
                 )
         );
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.username());
 
         String accessToken = jwtService.generateToken(userDetails);
         String refreshToken = generateRefreshTokenString(userDetails);
 
-        Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
+        Usuario usuario = usuarioRepository.findByUsername(request.username())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         refreshTokenRepository.revokeAllUserTokens(usuario);
@@ -81,17 +81,17 @@ public class AuthenticationService {
         refreshTokenEntity.setExpiresAt(LocalDateTime.now().plusSeconds(jwtService.getRefreshExpiration()));
         refreshTokenRepository.save(refreshTokenEntity);
 
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .tokenType("Bearer")
-                .expiresIn(jwtService.getExpiration())
-                .build();
+        return new AuthResponse(
+                accessToken,
+                refreshToken,
+                "Bearer",
+                jwtService.getExpiration()
+        );
     }
 
     @Transactional
     public AuthResponse refreshToken(RefreshTokenRequest request) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(request.getRefreshToken())
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(request.refreshToken())
                 .orElseThrow(() -> new RuntimeException("Refresh token inválido"));
 
         if (!refreshToken.isValid()) {
@@ -115,12 +115,12 @@ public class AuthenticationService {
         newRefreshTokenEntity.setExpiresAt(LocalDateTime.now().plusSeconds(jwtService.getRefreshExpiration()));
         refreshTokenRepository.save(newRefreshTokenEntity);
 
-        return AuthResponse.builder()
-                .accessToken(newAccessToken)
-                .refreshToken(newRefreshToken)
-                .tokenType("Bearer")
-                .expiresIn(jwtService.getExpiration())
-                .build();
+        return new AuthResponse(
+                newAccessToken,
+                newRefreshToken,
+                "Bearer",
+                jwtService.getExpiration()
+        );
     }
 
 

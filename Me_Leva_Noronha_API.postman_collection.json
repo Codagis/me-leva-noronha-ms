@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "me-leva-noronha-api",
 		"name": "Me Leva Noronha API",
-		"description": "Collection para autenticação, gerenciamento de usuários, tabela de marés e dicas",
+		"description": "Collection para autenticação, gerenciamento de usuários, tabela de marés, dicas, vida noturna e passeios",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -398,6 +398,309 @@
 				}
 			],
 			"description": "Endpoints relacionados ao gerenciamento de dicas"
+		},
+		{
+			"name": "Vida Noturna",
+			"item": [
+				{
+					"name": "Listar Vida Noturna",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/vida-noturna",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vida-noturna"
+							]
+						},
+						"description": "Endpoint para listar todas as opções de vida noturna cadastradas"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Vida Noturna por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/vida-noturna/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vida-noturna",
+								"1"
+							]
+						},
+						"description": "Endpoint para buscar uma opção específica de vida noturna pelo identificador"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Imagem Vida Noturna",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/vida-noturna/1/imagem",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vida-noturna",
+								"1",
+								"imagem"
+							]
+						},
+						"description": "Endpoint para obter a imagem armazenada no banco de uma opção de vida noturna"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Vida Noturna",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "titulo",
+									"value": "Sunset Noronha",
+									"type": "text"
+								},
+								{
+									"key": "horarioFuncionamento",
+									"value": "Seg a Dom - 18h às 02h",
+									"type": "text"
+								},
+								{
+									"key": "numeroWhatsapp",
+									"value": "5584999912345",
+									"type": "text"
+								},
+								{
+									"key": "linkGoogleMaps",
+									"value": "https://maps.app.goo.gl/exemplo",
+									"type": "text"
+								},
+								{
+									"key": "imagem",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/vida-noturna",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"vida-noturna"
+							]
+						},
+						"description": "Endpoint para cadastrar uma nova opção de vida noturna com upload de imagem"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados ao gerenciamento de vida noturna"
+		},
+		{
+			"name": "Passeios",
+			"item": [
+				{
+					"name": "Listar Passeios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/passeios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"passeios"
+							]
+						},
+						"description": "Endpoint para listar todos os passeios cadastrados"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Passeio por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/passeios/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"passeios",
+								"1"
+							]
+						},
+						"description": "Endpoint para buscar um passeio específico pelo identificador"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Imagem do Passeio",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/passeios/1/imagem",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"passeios",
+								"1",
+								"imagem"
+							]
+						},
+						"description": "Endpoint para obter a imagem armazenada no banco de um passeio"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Passeio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "tag",
+									"value": "aventura",
+									"type": "text"
+								},
+								{
+									"key": "titulo",
+									"value": "Trilha ao Morro do Pico",
+									"type": "text"
+								},
+								{
+									"key": "descricao",
+									"value": "Passeio guiado com vista panorâmica de Fernando de Noronha.",
+									"type": "text"
+								},
+								{
+									"key": "duracao",
+									"value": "3 horas",
+									"type": "text"
+								},
+								{
+									"key": "valor",
+									"value": "350.00",
+									"type": "text"
+								},
+								{
+									"key": "itensIncluidos",
+									"value": "Guia credenciado",
+									"type": "text"
+								},
+								{
+									"key": "itensIncluidos",
+									"value": "Seguro aventura",
+									"type": "text"
+								},
+								{
+									"key": "linkWhatsapp",
+									"value": "https://wa.me/5584999988888",
+									"type": "text"
+								},
+								{
+									"key": "categoria",
+									"value": "AVENTURA",
+									"type": "text"
+								},
+								{
+									"key": "imagem",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/passeios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"passeios"
+							]
+						},
+						"description": "Endpoint para cadastrar um novo passeio com upload de imagem"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados ao gerenciamento de passeios"
 		}
 	],
 	"variable": [

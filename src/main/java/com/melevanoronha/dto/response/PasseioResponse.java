@@ -1,6 +1,6 @@
 package com.melevanoronha.dto.response;
 
-import com.melevanoronha.model.PasseioCategoria;
+import com.melevanoronha.enumerator.PasseioCategoria;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -26,4 +26,52 @@ jwt:
   expiration: 28800 
   refresh-expiration: 604800
 
+weather:
+  open-meteo:
+    base-url: https://api.open-meteo.com/v1
+    forecast-url: ${weather.open-meteo.base-url}/forecast
+  location:
+    latitude: -3.8548
+    longitude: -32.4233
+    timezone: America/Recife
+
+# Configuração da API de Passagens Aéreas - Amadeus
+# 
+# Para usar a API Amadeus (GRATUITA para testes):
+# 1. Acesse https://developers.amadeus.com/
+# 2. Crie uma conta gratuita
+# 3. Crie uma aplicação no "My Self-Service Workspace"
+# 4. Copie o API Key e API Secret
+# 5. Configure os valores abaixo:
+#
+# flight:
+#   api:
+#     enabled: true
+#     base-url: https://test.api.amadeus.com/v2/shopping/flight-offers
+#     auth-url: https://test.api.amadeus.com/v1/security/oauth2/token
+#     key: SEU_API_KEY_AQUI
+#     secret: SEU_API_SECRET_AQUI
+#
+# Para produção, você precisará de um contrato comercial com a Amadeus.
+# Nesse caso, use:
+#   base-url: https://api.amadeus.com/v2/shopping/flight-offers
+#   auth-url: https://api.amadeus.com/v1/security/oauth2/token
+#
+# Se a API não estiver configurada, será usado um valor estimado baseado na origem.
+flight:
+  api:
+    enabled: true
+    base-url: https://test.api.amadeus.com/v2/shopping/flight-offers
+    auth-url: https://test.api.amadeus.com/v1/security/oauth2/token
+    key: IWsu4tTjxbsqKf5R3gYFuPlCJnD1juJp
+    secret: hsKcFgkZAPCKtSAN
+  fallback:
+    price-per-person: 1500.0  # Preço estimado por pessoa quando API não está disponível
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
 

@@ -1,5 +1,6 @@
 package com.melevanoronha.controller;
 
+import com.melevanoronha.controller.interfaces.TabelaMareControllerInterface;
 import com.melevanoronha.dto.request.TabelaMareRequest;
 import com.melevanoronha.dto.response.TabelaMareResponse;
 import com.melevanoronha.service.TabelaMareService;
@@ -8,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,20 +23,19 @@ import java.util.List;
  * @version 1.0
  */
 @RestController
-@RequestMapping("/api/tabuamare")
 @RequiredArgsConstructor
-public class TabelaMareController {
+public class TabelaMareController implements TabelaMareControllerInterface {
 
     private final TabelaMareService tabelaMareService;
 
-    @GetMapping
+    @Override
     public ResponseEntity<List<TabelaMareResponse>> listarPorData(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
         List<TabelaMareResponse> registros = tabelaMareService.listarPorData(data);
         return ResponseEntity.ok(registros);
     }
 
-    @PostMapping
+    @Override
     public ResponseEntity<TabelaMareResponse> cadastrar(@Valid @RequestBody TabelaMareRequest request) {
         TabelaMareResponse response = tabelaMareService.cadastrar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

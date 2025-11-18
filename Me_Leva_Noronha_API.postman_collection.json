@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "me-leva-noronha-api",
 		"name": "Me Leva Noronha API",
-		"description": "Collection para autenticação, gerenciamento de usuários, tabela de marés, dicas, vida noturna e passeios",
+		"description": "Collection para autenticação, gerenciamento de usuários, tabela de marés, dicas, vida noturna, passeios, previsão do tempo e calculadora de viagem",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -701,6 +701,274 @@
 				}
 			],
 			"description": "Endpoints relacionados ao gerenciamento de passeios"
+		},
+		{
+			"name": "Previsão do Tempo",
+			"item": [
+				{
+					"name": "Previsão Completa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/weather/forecast?latitude=-3.8548&longitude=-32.4233",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"weather",
+								"forecast"
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "-3.8548",
+									"description": "Latitude da localização (opcional, padrão: Fernando de Noronha)",
+									"disabled": false
+								},
+								{
+									"key": "longitude",
+									"value": "-32.4233",
+									"description": "Longitude da localização (opcional, padrão: Fernando de Noronha)",
+									"disabled": false
+								}
+							]
+						},
+						"description": "Endpoint público para obter a previsão completa do tempo. Retorna:\n- Temperatura atual, velocidade dos ventos, índice UV\n- Condições do mar (calmo/agitado)\n- Previsão hora a hora\n- Previsão geral dos próximos 7 dias\n\nParâmetros opcionais:\n- latitude: Latitude da localização (ex: -3.8548 para Fernando de Noronha)\n- longitude: Longitude da localização (ex: -32.4233 para Fernando de Noronha)\n\nSe não informados, usa as coordenadas padrão de Fernando de Noronha.\nDados obtidos da API Open-Meteo."
+					},
+					"response": []
+				},
+				{
+					"name": "Dados Meteorológicos Atuais",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/weather/current?latitude=-3.8548&longitude=-32.4233",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"weather",
+								"current"
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "-3.8548",
+									"description": "Latitude da localização (opcional, padrão: Fernando de Noronha)",
+									"disabled": false
+								},
+								{
+									"key": "longitude",
+									"value": "-32.4233",
+									"description": "Longitude da localização (opcional, padrão: Fernando de Noronha)",
+									"disabled": false
+								}
+							]
+						},
+						"description": "Endpoint público para obter apenas os dados meteorológicos atuais:\n- Temperatura atual\n- Velocidade dos ventos\n- Direção do vento\n- Código e descrição do tempo\n\nParâmetros opcionais:\n- latitude: Latitude da localização (ex: -3.8548 para Fernando de Noronha)\n- longitude: Longitude da localização (ex: -32.4233 para Fernando de Noronha)\n\nSe não informados, usa as coordenadas padrão de Fernando de Noronha.\nDados obtidos da API Open-Meteo."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints públicos relacionados à previsão do tempo em Fernando de Noronha. Integração com Open-Meteo API."
+		},
+		{
+			"name": "Calculadora de Viagem",
+			"item": [
+				{
+					"name": "Listar Capitais Brasileiras",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/calculadora-viagem/capitais",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"calculadora-viagem",
+								"capitais"
+							]
+						},
+						"description": "Endpoint protegido para listar todas as 26 capitais brasileiras disponíveis como origem da viagem. Retorna o nome completo no formato 'Cidade - UF' e o código IATA do aeroporto. Requer autenticação JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Passeios Disponíveis",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/calculadora-viagem/passeios",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"calculadora-viagem",
+								"passeios"
+							]
+						},
+						"description": "Endpoint protegido para listar todos os passeios disponíveis na calculadora de viagem. Retorna o código do passeio (usado na requisição de cálculo), nome amigável e valor por pessoa em reais. Requer autenticação JWT."
+					},
+					"response": []
+				},
+				{
+					"name": "Calcular Passagens Aéreas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/calculadora-viagem/passagens",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"calculadora-viagem",
+								"passagens"
+							]
+						},
+						"description": "Endpoint protegido para calcular apenas o valor das passagens aéreas para Fernando de Noronha. Requer autenticação JWT.\n\nParâmetros:\n- origem: Capital brasileira no formato 'Cidade - UF' (ex: 'Fortaleza - CE')\n- duracaoDias: Duração da viagem em dias (mínimo: 1)\n- numeroPessoas: Número de pessoas (mínimo: 1)\n\nRetorna:\n- passagensAereas: Valor total das passagens (busca via API Amadeus ou estimativa). O valor é calculado por pessoa e depois somado para o total de pessoas."
+					},
+					"response": []
+				},
+				{
+					"name": "Calcular Custos (Sem Passagens)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MEDIO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/calculadora-viagem/calcular",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"calculadora-viagem",
+								"calcular"
+							]
+						},
+						"description": "Endpoint protegido para calcular os custos da viagem EXCETO passagens aéreas. Requer autenticação JWT.\n\nIMPORTANTE: Este endpoint NÃO calcula passagens aéreas. O campo 'passagensAereas' sempre retornará R$ 0,00.\n\nParâmetros:\n- origem: Capital brasileira no formato 'Cidade - UF' (ex: 'Fortaleza - CE') - Obrigatório mas não usado para cálculo de passagens\n- duracaoDias: Duração da viagem em dias (mínimo: 1)\n- numeroPessoas: Número de pessoas (mínimo: 1)\n- tipoHospedagem: MOCHILEIRO (R$150/dia), ECONOMICA (R$300/dia), INTERMEDIARIA (R$600/dia), LUXO (R$1500/dia)\n- categoriaRestaurante: ECONOMICOS (R$80/dia), MEDIO (R$150/dia), PREMIUM (R$300/dia)\n- tipoTransporte: ALUGUEL_CARRO_BUGGY (R$200/dia), TAXI (R$80/dia), ONIBUS (R$10/dia), NENHUM (R$0)\n- passeios: Array com códigos dos passeios (opcional). Use os códigos retornados pelo endpoint /passeios\n\nRetorna:\n- passagensAereas: Sempre R$ 0,00 (não calcula passagens)\n- hospedagem: Valor total da hospedagem\n- alimentacao: Valor total da alimentação\n- passeios: Valor total dos passeios selecionados\n- transporteLocal: Valor total do transporte local\n- taxas: Valor total das taxas obrigatórias (TUP: R$ 79,20/dia por pessoa + PARNAMAR: R$ 222,00 fixo por pessoa)\n- total: Soma de todos os custos (exceto passagens)"
+					},
+					"response": []
+				},
+				{
+					"name": "Calcular Outros Custos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MEDIO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/calculadora-viagem/calcular-outros",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"calculadora-viagem",
+								"calcular-outros"
+							]
+						},
+						"description": "Endpoint protegido para calcular apenas os outros custos (sem passagens aéreas). Requer autenticação JWT.\n\nEste endpoint é equivalente ao endpoint /calcular. Calcula hospedagem, alimentação, passeios, transporte local e taxas, mas NÃO calcula passagens aéreas.\n\nParâmetros:\n- origem: Capital brasileira no formato 'Cidade - UF' (ex: 'Fortaleza - CE') - Obrigatório mas não usado para cálculo de passagens\n- duracaoDias: Duração da viagem em dias (mínimo: 1)\n- numeroPessoas: Número de pessoas (mínimo: 1)\n- tipoHospedagem: MOCHILEIRO (R$150/dia), ECONOMICA (R$300/dia), INTERMEDIARIA (R$600/dia), LUXO (R$1500/dia)\n- categoriaRestaurante: ECONOMICOS (R$80/dia), MEDIO (R$150/dia), PREMIUM (R$300/dia)\n- tipoTransporte: ALUGUEL_CARRO_BUGGY (R$200/dia), TAXI (R$80/dia), ONIBUS (R$10/dia), NENHUM (R$0)\n- passeios: Array com códigos dos passeios (opcional). Use os códigos retornados pelo endpoint /passeios\n\nRetorna:\n- passagensAereas: Sempre R$ 0,00 (não calcula passagens)\n- hospedagem: Valor total da hospedagem\n- alimentacao: Valor total da alimentação\n- passeios: Valor total dos passeios selecionados\n- transporteLocal: Valor total do transporte local\n- taxas: Valor total das taxas obrigatórias (TUP: R$ 79,20/dia por pessoa + PARNAMAR: R$ 222,00 fixo por pessoa)\n- total: Soma de todos os custos (exceto passagens)"
+					},
+					"response": []
+				},
+				{
+					"name": "Calcular Custos Completos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MEDIO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ],\n    \"jaTemPassagens\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/calculadora-viagem/calcular-completo",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"calculadora-viagem",
+								"calcular-completo"
+							]
+						},
+						"description": "Endpoint protegido para calcular TODOS os custos da viagem incluindo passagens aéreas. Requer autenticação JWT.\n\nEste endpoint calcula passagens aéreas (via API Amadeus), hospedagem, alimentação, passeios, transporte local e taxas.\n\nParâmetros:\n- origem: Capital brasileira no formato 'Cidade - UF' (ex: 'Fortaleza - CE') - Obrigatório para cálculo de passagens\n- duracaoDias: Duração da viagem em dias (mínimo: 1)\n- numeroPessoas: Número de pessoas (mínimo: 1)\n- tipoHospedagem: MOCHILEIRO (R$150/dia), ECONOMICA (R$300/dia), INTERMEDIARIA (R$600/dia), LUXO (R$1500/dia)\n- categoriaRestaurante: ECONOMICOS (R$80/dia), MEDIO (R$150/dia), PREMIUM (R$300/dia)\n- tipoTransporte: ALUGUEL_CARRO_BUGGY (R$200/dia), TAXI (R$80/dia), ONIBUS (R$10/dia), NENHUM (R$0)\n- passeios: Array com códigos dos passeios (opcional). Use os códigos retornados pelo endpoint /passeios\n- jaTemPassagens: Boolean (opcional, padrão: false). Se true, o cálculo de passagens aéreas será desconsiderado (retorna R$ 0,00)\n\nRetorna:\n- passagensAereas: Valor total das passagens (busca via API Amadeus ou estimativa, ou R$ 0,00 se jaTemPassagens=true)\n- hospedagem: Valor total da hospedagem\n- alimentacao: Valor total da alimentação\n- passeios: Valor total dos passeios selecionados\n- transporteLocal: Valor total do transporte local\n- taxas: Valor total das taxas obrigatórias (TUP: R$ 79,20/dia por pessoa + PARNAMAR: R$ 222,00 fixo por pessoa)\n- total: Soma de todos os custos incluindo passagens e taxas"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints protegidos da calculadora de viagem para Fernando de Noronha. Permite calcular custos totais incluindo passagens aéreas (via API Amadeus), hospedagem, alimentação, passeios e transporte local. Todos os endpoints requerem autenticação JWT."
 		}
 	],
 	"variable": [

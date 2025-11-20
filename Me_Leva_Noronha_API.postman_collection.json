@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "me-leva-noronha-api",
 		"name": "Me Leva Noronha API",
-		"description": "Collection para autenticação, gerenciamento de usuários, tabela de marés, dicas, vida noturna, passeios, previsão do tempo e calculadora de viagem",
+		"description": "Collection para autenticação, gerenciamento de usuários, tabela de marés, dicas, vida noturna, passeios, restaurantes, pontos de interesse, previsão do tempo, calculadora de viagem e calculadora de táxi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -882,7 +882,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MEDIO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ]\n}"
+							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MODERADO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ]\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/calculadora-viagem/calcular",
@@ -916,7 +916,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MEDIO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ]\n}"
+							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MODERADO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ]\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/calculadora-viagem/calcular-outros",
@@ -950,7 +950,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MEDIO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ],\n    \"jaTemPassagens\": false\n}"
+							"raw": "{\n    \"origem\": \"Fortaleza - CE\",\n    \"duracaoDias\": 5,\n    \"numeroPessoas\": 2,\n    \"tipoHospedagem\": \"INTERMEDIARIA\",\n    \"categoriaRestaurante\": \"MODERADO\",\n    \"tipoTransporte\": \"ALUGUEL_CARRO_BUGGY\",\n    \"passeios\": [\n        \"PASSEIO_BARCO_ENTARDECER_VIP\",\n        \"MERGULHO_CILINDRO\"\n    ],\n    \"jaTemPassagens\": false\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/api/calculadora-viagem/calcular-completo",
@@ -969,6 +969,386 @@
 				}
 			],
 			"description": "Endpoints protegidos da calculadora de viagem para Fernando de Noronha. Permite calcular custos totais incluindo passagens aéreas (via API Amadeus), hospedagem, alimentação, passeios e transporte local. Todos os endpoints requerem autenticação JWT."
+		},
+		{
+			"name": "Restaurantes",
+			"item": [
+				{
+					"name": "Listar Restaurantes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes?categoria=MODERADO",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes"
+							],
+							"query": [
+								{
+									"key": "categoria",
+									"value": "MODERADO",
+									"description": "Filtrar por categoria (opcional). Valores: ECONOMICO ($), MODERADO ($$), SOFISTICADO ($$$), PREMIUM ($$$$)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Endpoint para listar restaurantes cadastrados. Pode ser filtrado por categoria usando o parâmetro 'categoria' (opcional).\n\nParâmetros:\n- categoria (opcional): Filtro por categoria do restaurante. Valores possíveis:\n  * ECONOMICO - $ Econômico\n  * MODERADO - $$ Moderado\n  * SOFISTICADO - $$$ Sofisticado\n  * PREMIUM - $$$$ Premium\n\nSe o parâmetro não for informado, retorna todos os restaurantes."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Restaurantes por Categoria - Econômico",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes?categoria=ECONOMICO",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes"
+							],
+							"query": [
+								{
+									"key": "categoria",
+									"value": "ECONOMICO",
+									"description": "Categoria: $ Econômico"
+								}
+							]
+						},
+						"description": "Endpoint para listar restaurantes da categoria Econômico ($)"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Restaurantes por Categoria - Moderado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes?categoria=MODERADO",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes"
+							],
+							"query": [
+								{
+									"key": "categoria",
+									"value": "MODERADO",
+									"description": "Categoria: $$ Moderado"
+								}
+							]
+						},
+						"description": "Endpoint para listar restaurantes da categoria Moderado ($$)"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Restaurantes por Categoria - Sofisticado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes?categoria=SOFISTICADO",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes"
+							],
+							"query": [
+								{
+									"key": "categoria",
+									"value": "SOFISTICADO",
+									"description": "Categoria: $$$ Sofisticado"
+								}
+							]
+						},
+						"description": "Endpoint para listar restaurantes da categoria Sofisticado ($$$)"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Restaurantes por Categoria - Premium",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes?categoria=PREMIUM",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes"
+							],
+							"query": [
+								{
+									"key": "categoria",
+									"value": "PREMIUM",
+									"description": "Categoria: $$$$ Premium"
+								}
+							]
+						},
+						"description": "Endpoint para listar restaurantes da categoria Premium ($$$$)"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Restaurante por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes",
+								"1"
+							]
+						},
+						"description": "Endpoint para buscar um restaurante específico pelo identificador"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Imagem do Restaurante",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes/1/imagem",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes",
+								"1",
+								"imagem"
+							]
+						},
+						"description": "Endpoint para obter a imagem armazenada no banco de um restaurante"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Restaurante",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nome",
+									"value": "Restaurante do Porto",
+									"type": "text"
+								},
+								{
+									"key": "descricao",
+									"value": "Restaurante especializado em frutos do mar com vista para o mar.",
+									"type": "text"
+								},
+								{
+									"key": "numeroWhatsapp",
+									"value": "5584999999999",
+									"type": "text"
+								},
+								{
+									"key": "categoria",
+									"value": "MODERADO",
+									"type": "text",
+									"description": "Valores possíveis: ECONOMICO, MODERADO, SOFISTICADO, PREMIUM"
+								},
+								{
+									"key": "imagem",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/restaurantes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"restaurantes"
+							]
+						},
+						"description": "Endpoint para cadastrar um novo restaurante com upload de imagem.\n\nParâmetros:\n- nome: Nome do restaurante (obrigatório, máximo 150 caracteres)\n- descricao: Descrição do restaurante (obrigatório, máximo 1000 caracteres)\n- numeroWhatsapp: Número de WhatsApp do restaurante (obrigatório, máximo 20 caracteres)\n- categoria: Categoria do restaurante (obrigatório). Valores possíveis:\n  * ECONOMICO - $ Econômico\n  * MODERADO - $$ Moderado\n  * SOFISTICADO - $$$ Sofisticado\n  * PREMIUM - $$$$ Premium\n- imagem: Arquivo de imagem (obrigatório)\n\nNa listagem, a categoria é exibida apenas com os cifrões (ex: \"$\", \"$$\", \"$$$\", \"$$$$\")."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados ao gerenciamento de restaurantes em Fernando de Noronha"
+		},
+		{
+			"name": "Calculadora de Táxi",
+			"item": [
+				{
+					"name": "Calcular Corrida de Táxi",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"origem\": \"Vila dos Remédios\",\n    \"destino\": \"Vila do Trinta\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/taxi/calcular",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"taxi",
+								"calcular"
+							]
+						},
+						"description": "Endpoint protegido para calcular o valor de uma corrida de táxi entre dois pontos em Fernando de Noronha. Retorna os valores da Tabela 1 e Tabela 2 para a rota especificada, incluindo os números de WhatsApp de cada tabela. Requer autenticação JWT.\n\nParâmetros:\n- origem: Local de partida da corrida (ex: \"Vila dos Remédios\")\n- destino: Local de destino da corrida (ex: \"Vila do Trinta\", \"Vila do Porto\", \"Praia do Sancho\", etc.)\n\nExemplos de destinos disponíveis:\n- Vila do Trinta\n- Vila do Porto\n- Vila Floresta Nova / Velha\n- Vila da Vacaria / Dolphin\n- Vila dos 3 Paus\n- Vila do Bolbro/ICMbio\n- Vila da Basinha\n- Vila da Corea\n- Vila do Aeroporto\n- Vila Estrada Velha do Suest\n- Vila do Sueste\n- Praia do Meio / Conceição\n- Praia do Boldró\n- Praia do Bode\n- Praia da Cacimba do Padre\n- Praia do Sancho\n- Praia do Leão / caracas\n- Trilha do Capim Açu\n- Forte dos Remédios\n- Air France\n- Abreus\n\nRetorna:\n- origem: Local de partida informado\n- destino: Local de destino informado\n- valorTabela1: Valor da corrida na Tabela 1 (em R$)\n- valorTabela2: Valor da corrida na Tabela 2 (em R$)\n- whatsappTabela1: Número de WhatsApp da Tabela 1\n- whatsappTabela2: Número de WhatsApp da Tabela 2\n\nSe a rota não for encontrada, retorna erro 404 com mensagem informativa."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints protegidos da calculadora de corridas de táxi em Fernando de Noronha. Permite calcular os valores de corridas entre diferentes pontos da ilha, retornando os valores das duas tabelas de preços disponíveis. Todos os endpoints requerem autenticação JWT."
+		},
+		{
+			"name": "Pontos de Interesse",
+			"item": [
+				{
+					"name": "Listar Pontos de Interesse",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pontos-interesse",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pontos-interesse"
+							]
+						},
+						"description": "Endpoint para listar todos os pontos de interesse cadastrados"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Ponto de Interesse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"titulo\": \"Mirante da Baía dos Golfinhos\",\n    \"categoria\": \"Mirante\",\n    \"tag\": \"turismo\",\n    \"linkGoogleMaps\": \"https://maps.app.goo.gl/exemplo\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pontos-interesse",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pontos-interesse"
+							]
+						},
+						"description": "Endpoint para cadastrar um novo ponto de interesse.\n\nParâmetros:\n- titulo: Título do ponto de interesse (obrigatório, máximo 150 caracteres)\n- categoria: Categoria do ponto de interesse (obrigatório, máximo 100 caracteres)\n- tag: Tag para classificação (obrigatório, máximo 100 caracteres)\n- linkGoogleMaps: Link do Google Maps do ponto de interesse (obrigatório, máximo 512 caracteres)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados ao gerenciamento de pontos de interesse em Fernando de Noronha"
 		}
 	],
 	"variable": [

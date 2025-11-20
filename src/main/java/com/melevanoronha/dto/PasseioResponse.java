@@ -1,6 +1,7 @@
 package com.melevanoronha.dto;
 
 import com.melevanoronha.enumerator.PasseioCategoria;
+import com.melevanoronha.enumerator.TopRanking;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,7 +23,8 @@ public record PasseioResponse(
         String linkWhatsapp,
         PasseioCategoria categoria,
         String categoriaDescricao,
-        String linkImagem
+        String linkImagem,
+        TopRanking topRanking
 ) {
 
     public PasseioResponse {
@@ -30,7 +32,7 @@ public record PasseioResponse(
     }
 
     public PasseioResponse withLinkImagem(String linkImagem) {
-        return new PasseioResponse(id, tag, titulo, descricao, duracao, valor, itensIncluidos, linkWhatsapp, categoria, categoriaDescricao, linkImagem);
+        return new PasseioResponse(id, tag, titulo, descricao, duracao, valor, itensIncluidos, linkWhatsapp, categoria, categoriaDescricao, linkImagem, topRanking);
     }
 }
 

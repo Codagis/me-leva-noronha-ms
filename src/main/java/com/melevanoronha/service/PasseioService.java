@@ -2,6 +2,7 @@ package com.melevanoronha.service;
 
 import com.melevanoronha.dto.PasseioRequest;
 import com.melevanoronha.dto.PasseioResponse;
+import com.melevanoronha.enumerator.TopRanking;
 import com.melevanoronha.model.Passeio;
 import com.melevanoronha.repository.PasseioRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -60,6 +61,7 @@ public class PasseioService {
         passeio.getItensIncluidos().addAll(request.itensIncluidos());
         passeio.setLinkWhatsapp(request.linkWhatsapp());
         passeio.setCategoria(request.categoria());
+        passeio.setTopRanking(request.topRanking());
         passeio.setImagemContentType(definirContentType(request.imagem()));
         passeio.setImagemDados(obterBytes(request.imagem()));
         passeio.setLinkImagem("");
@@ -81,7 +83,8 @@ public class PasseioService {
                 passeio.getLinkWhatsapp(),
                 passeio.getCategoria(),
                 passeio.getCategoria() != null ? passeio.getCategoria().getDescricao() : null,
-                passeio.getLinkImagem()
+                passeio.getLinkImagem(),
+                passeio.getTopRanking()
         );
     }
 

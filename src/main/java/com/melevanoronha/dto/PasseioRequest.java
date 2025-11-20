@@ -1,6 +1,7 @@
 package com.melevanoronha.dto;
 
 import com.melevanoronha.enumerator.PasseioCategoria;
+import com.melevanoronha.enumerator.TopRanking;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -52,7 +53,9 @@ public record PasseioRequest(
         PasseioCategoria categoria,
 
         @NotNull
-        MultipartFile imagem
+        MultipartFile imagem,
+
+        TopRanking topRanking
 ) {
 }
 

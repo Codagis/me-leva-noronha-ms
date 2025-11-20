@@ -1,13 +1,18 @@
 package com.melevanoronha.config;
 
 import com.melevanoronha.model.TabuaMare;
+import com.melevanoronha.model.TaxiPreco;
+import com.melevanoronha.model.TaxiTabela;
 import com.melevanoronha.repository.TabelaMareRepository;
+import com.melevanoronha.repository.TaxiPrecoRepository;
+import com.melevanoronha.repository.TaxiTabelaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +30,8 @@ import java.util.List;
 public class DataInitializer implements CommandLineRunner {
 
     private final TabelaMareRepository tabelaMareRepository;
+    private final TaxiPrecoRepository taxiPrecoRepository;
+    private final TaxiTabelaRepository taxiTabelaRepository;
 
     @Override
     @Transactional
@@ -41,6 +48,7 @@ public class DataInitializer implements CommandLineRunner {
         inserirDadosOutubro2025();
         inserirDadosNovembro2025();
         inserirDadosDezembro2025();
+        inserirDadosTaxi();
     }
 
     private void inserirDadosJaneiro2025() {
@@ -2060,6 +2068,394 @@ public class DataInitializer implements CommandLineRunner {
         tabuaMare.setHorario(horario);
         tabuaMare.setMetro(metro);
         registros.add(tabuaMare);
+    }
+
+    private void inserirDadosTaxi() {
+        // Inserir tabelas de táxi (com números de WhatsApp) - apenas uma vez
+        inserirTabelasTaxi();
+
+        log.info("Verificando e inserindo dados de preços de táxi...");
+        List<TaxiPreco> registros = new ArrayList<>();
+
+        String origem = "Vila dos Remédios";
+
+        // Adicionando todos os destinos com seus respectivos valores
+        adicionarTaxiPreco(registros, origem, "Vila do Trinta", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origem, "Vila do Porto", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origem, "Vila Floresta Nova / Velha", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origem, "Vila da Vacaria / Dolphin", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origem, "Vila dos 3 Paus", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origem, "Vila do Bolbro/ICMbio", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origem, "Vila da Basinha", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origem, "Vila da Corea", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origem, "Vila do Aeroporto", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origem, "Vila Estrada Velha do Suest", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origem, "Vila do Sueste", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origem, "Praia do Meio / Conceição", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origem, "Praia do Boldró", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origem, "Praia do Bode", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origem, "Praia da Cacimba do Padre", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origem, "Praia do Sancho", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origem, "Praia do Leão / caracas", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origem, "Trilha do Capim Açu", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origem, "Forte dos Remédios", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origem, "Air France", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origem, "Abreus", 45.00, 48.00);
+
+        // Nova origem: Vila do Boldró/ICMbio
+        String origemBoldro = "Vila do Boldró/ICMbio";
+        adicionarTaxiPreco(registros, origemBoldro, "Vila dos Remédios", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila do Trinta", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila do Porto", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila Floresta Nova / Velha", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila da Vacaria / Dolphin", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila da Basinha", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila da Corea", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila do Aeroporto", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila Estrada Velha do Suest", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila do Sueste", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Praia do Meio / Conceição", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Praia do Boldró", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Praia do Bode", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Praia da Cacimba do Padre", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Praia do Sancho", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Praia do Leão / caracas", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Trilha do Capim Açu", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Vila dos 3 Paus", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Forte dos Remédios", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldro, "Abreus", 40.00, 45.00);
+        // Air France não possui valores especificados na tabela fornecida
+
+        // Nova origem: Vila da Basinha
+        String origemBasinha = "Vila da Basinha";
+        adicionarTaxiPreco(registros, origemBasinha, "Vila dos Remédios", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila do Trinta", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila do Porto", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila Floresta Nova / Velha", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila da Vacaria / Dolphin", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila do Boldró/ICMbio", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila da Corea", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila do Aeroporto", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila Estrada Velha do Suest", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila do Sueste", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Praia do Meio / Conceição", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Praia do Boldró", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Praia do Bode", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Praia da Cacimba do Padre", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Praia do Sancho", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Praia do Leão / caracas", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Trilha do Capim Açu", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Vila dos 3 Paus", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Forte dos Remédios", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Air France", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemBasinha, "Abreus", 35.00, 40.00);
+
+        // Nova origem: Vila do Porto
+        String origemPorto = "Vila do Porto";
+        adicionarTaxiPreco(registros, origemPorto, "Vila do Trinta", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila dos Remédios", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila Floresta Nova / Velha", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila da Vacaria / Dolphin", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila dos 3 Paus", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila do Boldró/ICMbio", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila da Basinha", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila da Corea", 42.00, 48.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila do Aeroporto", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila Estrada Velha do Suest", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPorto, "Vila do Sueste", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemPorto, "Praia do Meio / Conceição", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPorto, "Praia do Boldró", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemPorto, "Praia do Bode", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemPorto, "Praia da Cacimba do Padre", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPorto, "Praia do Sancho", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPorto, "Praia do Leão / caracas", 55.00, 60.00);
+        adicionarTaxiPreco(registros, origemPorto, "Trilha do Capim Açu", 55.00, 60.00);
+        adicionarTaxiPreco(registros, origemPorto, "Forte dos Remédios", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPorto, "Air France", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemPorto, "Abreus", 50.00, 55.00);
+
+        // Nova origem: Vila da Floresta Nova / Velha
+        String origemFloresta = "Vila da Floresta Nova / Velha";
+        adicionarTaxiPreco(registros, origemFloresta, "Vila dos Remédios", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila do Trinta", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila do Porto", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila da Vacaria / Dolphin", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila dos 3 Paus", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila do Boldró/ICMbio", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila da Basinha", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila da Corea", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila do Aeroporto", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila Estrada Velha do Suest", 44.00, 48.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Vila do Sueste", 42.00, 46.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Praia do Meio / Conceição", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Praia do Boldró", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Praia do Bode", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Praia da Cacimba do Padre", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Praia do Sancho", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Praia do Leão / caracas", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Trilha do Capim Açu", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Forte dos Remédios", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Air France", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemFloresta, "Abreus", 45.00, 48.00);
+
+        // Nova origem: Vila da Vacaria / Dolphin
+        String origemVacaria = "Vila da Vacaria / Dolphin";
+        adicionarTaxiPreco(registros, origemVacaria, "Vila dos Remédios", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila do Trinta", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila do Porto", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila Floresta Nova / Velha", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila do Boldró/ICMbio", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila da Basinha", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila da Corea", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila do Aeroporto", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila Estrada Velha do Suest", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila do Sueste", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Praia do Meio / Conceição", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Praia do Boldró", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Praia do Bode", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Praia da Cacimba do Padre", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Praia do Sancho", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Praia do Leão / caracas", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Trilha do Capim Açu", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Vila dos 3 Paus", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Forte dos Remédios", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Air France", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemVacaria, "Abreus", 40.00, 45.00);
+
+        // Nova origem: Vila do Boldró / ICMbio (com espaços)
+        // Nota: Se já existir "Vila do Boldró/ICMbio" (sem espaços), os registros serão inseridos apenas se não existirem
+        String origemBoldroComEspacos = "Vila do Boldró / ICMbio";
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila dos Remédios", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila do Trinta", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila do Porto", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila Floresta Nova / Velha", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila da Vacaria / Dolphin", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila da Basinha", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila da Corea", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila do Aeroporto", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila Estrada Velha do Suest", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila do Sueste", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Praia do Meio / Conceição", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Praia do Boldró", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Praia do Bode", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Praia da Cacimba do Padre", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Praia do Sancho", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Praia do Leão / caracas", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Trilha do Capim Açu", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Vila dos 3 Paus", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Forte dos Remédios", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Air France", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemBoldroComEspacos, "Abreus", 40.00, 45.00);
+
+        // Nova origem: Vila do Aeroporto
+        String origemAeroporto = "Vila do Aeroporto";
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila dos Remédios", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila do Trinta", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila do Porto", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila Floresta Nova / Velha", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila da Vacaria / Dolphin", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila do Boldró", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila da Basinha", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila Estrada Velha do Suest", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila do Sueste", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Praia do Meio / Conceição", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Praia do Boldró", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Praia do Bode", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Praia da Cacimba do Padre", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Praia do Sancho", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Praia do Leão / caracas", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Trilha do Capim Açu", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila dos 3 Paus", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Forte dos Remédios", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Air France", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Abreus", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemAeroporto, "Vila da Coreia", 28.00, 32.00);
+
+        // Nova origem: Vila Estrada Velha do Sueste
+        String origemEstradaVelha = "Vila Estrada Velha do Sueste";
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila dos Remédios", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila do Trinta", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila do Porto", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila Floresta Nova / Velha", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila da Vacaria / Dolphin", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila do Boldró/ICMbio", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila da Basinha", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila da Corea", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila do Aeroporto", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila do Sueste", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Praia do Meio / Conceição", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Praia do Boldró", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Praia do Bode", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Praia da Cacimba do Padre", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Praia do Sancho", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Praia do Leão / caracas", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Trilha do Capim Açu", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Vila dos 3 Paus", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Forte dos Remédios", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Air France", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemEstradaVelha, "Abreus", 28.00, 32.00);
+
+        // Nova origem: Praia do Boldró
+        String origemPraiaBoldro = "Praia do Boldró";
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Praia do Meio / Conceição", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Praia do Bode", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Praia da Cacimba do Padre", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Praia do Sancho", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Praia do Sueste", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Praia do Leão / caracas", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Estrada Velha do Sueste", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Trilha do Capim Açu", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Vila dos 3 Paus", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Forte dos Remédios", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Air France", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaBoldro, "Trilha do Abreus", 45.00, 48.00);
+
+        // Nova origem: Praia da Cacimba do Padre
+        String origemCacimba = "Praia da Cacimba do Padre";
+        adicionarTaxiPreco(registros, origemCacimba, "Praia do Meio / Conceição", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Praia do Boldró", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Praia do Bode", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Praia do Sancho", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Praia do Sueste", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Praia do Leão / caracas", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Estrada Velha do Sueste", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Trilha do Capim Açu", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Vila dos 3 Paus", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Forte dos Remédios", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Air France", 55.00, 58.00);
+        adicionarTaxiPreco(registros, origemCacimba, "Trilha do Abreus", 48.00, 52.00);
+
+        // Nova origem: Praia do Meio/Conceição
+        String origemPraiaMeio = "Praia do Meio/Conceição";
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Praia do Boldró", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Praia do Bode", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Praia da Cacimba do Padre", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Praia do Sancho", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Praia do Sueste", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Praia do Leão / caracas", 55.00, 58.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Estrada Velha do Sueste", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Trilha do Capim Açu", 58.00, 62.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Vila dos 3 Paus", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Forte dos Remédios", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Air France", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaMeio, "Trilha do Abreus", 55.00, 58.00);
+
+        // Nova origem: Praia do Sueste
+        String origemPraiaSueste = "Praia do Sueste";
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Praia do Meio / Conceição", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Praia do Boldró", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Praia do Bode", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Praia da Cacimba do Padre", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Praia do Sancho", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Praia do Leão / caracas", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Estrada Velha do Sueste", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Trilha do Capim Açu", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Vila dos 3 Paus", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Forte dos Remédios", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Air France", 52.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaSueste, "Trilha do Abreus", 30.00, 35.00);
+
+        // Nova origem: Praia do Bode
+        String origemPraiaBode = "Praia do Bode";
+        adicionarTaxiPreco(registros, origemPraiaBode, "Praia do Meio / Conceição", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Praia do Boldró", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Praia da Cacimba do Padre", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Praia do Sancho", 35.00, 38.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Praia do Sueste", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Praia do Leão / caracas", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Estrada Velha do Sueste", 38.00, 42.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Trilha do Capim Açu", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Vila dos 3 Paus", 32.00, 35.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Forte dos Remédios", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Air France", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemPraiaBode, "Trilha do Abreus", 42.00, 45.00);
+
+        // Nova origem: Praia do Sancho
+        String origemPraiaSancho = "Praia do Sancho";
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Praia do Meio / Conceição", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Praia do Boldró", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Praia do Bode", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Praia da Cacimba do Padre", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Praia do Sueste", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Praia do Leão / caracas", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Estrada Velha do Sueste", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Trilha do Capim Açu", 28.00, 32.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Vila dos 3 Paus", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Forte dos Remédios", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Air France", 52.00, 55.00);
+        adicionarTaxiPreco(registros, origemPraiaSancho, "Trilha do Abreus", 38.00, 42.00);
+
+        // Nova origem: Trilha do Abreus
+        String origemTrilhaAbreus = "Trilha do Abreus";
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila do Porto", 50.00, 55.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila do Trinta", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila dos Remédios", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila Floresta Nova / Velha", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila da Vacaria / Dolphin", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila do Boldró / ICMbio", 40.00, 45.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila da Basinha", 35.00, 40.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila do Aeroporto / Corea", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Vila dos 3 Paus", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Forte dos Remédios", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemTrilhaAbreus, "Air France", 52.00, 55.00);
+
+        // Nova origem: Praia do Leão/Caracas
+        String origemPraiaLeao = "Praia do Leão/Caracas";
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Praia do Meio / Conceição", 55.00, 58.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Praia do Boldró", 45.00, 48.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Praia do Bode", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Praia da Cacimba do Padre", 48.00, 52.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Praia do Sancho", 42.00, 45.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Praia do Sueste", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Estrada Velha do Sueste", 30.00, 35.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Trilha do Capim Açu", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Vila dos 3 Paus", 45.00, 50.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Forte dos Remédios", 55.00, 58.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Air France", 58.00, 62.00);
+        adicionarTaxiPreco(registros, origemPraiaLeao, "Trilha do Abreus", 42.00, 45.00);
+
+        if (!registros.isEmpty()) {
+            taxiPrecoRepository.saveAll(registros);
+            log.info("Inseridos {} novos registros de preços de táxi.", registros.size());
+        } else {
+            log.info("Todos os registros de preços de táxi já existem. Nenhum novo registro inserido.");
+        }
+    }
+
+    private void inserirTabelasTaxi() {
+        if (taxiTabelaRepository.count() > 0) {
+            log.info("Tabelas de táxi já existem. Pulando inserção.");
+            return;
+        }
+
+        log.info("Inserindo tabelas de táxi com números de WhatsApp...");
+        
+        TaxiTabela tabela1 = new TaxiTabela();
+        tabela1.setNome("Tabela 1");
+        tabela1.setNumeroWhatsapp("5584999999999"); // Substitua pelo número real da Tabela 1
+        
+        TaxiTabela tabela2 = new TaxiTabela();
+        tabela2.setNome("Tabela 2");
+        tabela2.setNumeroWhatsapp("5584999999998"); // Substitua pelo número real da Tabela 2
+        
+        taxiTabelaRepository.save(tabela1);
+        taxiTabelaRepository.save(tabela2);
+        
+        log.info("Tabelas de táxi inseridas com sucesso.");
+    }
+
+    private void adicionarTaxiPreco(List<TaxiPreco> registros, String origem, String destino, double valorTabela1, double valorTabela2) {
+        // Verifica se o registro já existe antes de adicionar
+        if (!taxiPrecoRepository.existsByOrigemIgnoreCaseAndDestinoIgnoreCase(origem, destino)) {
+            TaxiPreco taxiPreco = new TaxiPreco();
+            taxiPreco.setOrigem(origem);
+            taxiPreco.setDestino(destino);
+            taxiPreco.setValorTabela1(BigDecimal.valueOf(valorTabela1));
+            taxiPreco.setValorTabela2(BigDecimal.valueOf(valorTabela2));
+            registros.add(taxiPreco);
+        } else {
+            log.debug("Registro já existe: {} -> {}", origem, destino);
+        }
     }
 }
 

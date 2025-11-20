@@ -500,6 +500,18 @@
 									"type": "text"
 								},
 								{
+									"key": "descricao",
+									"value": "Bar e restaurante com vista para o pôr do sol, música ao vivo e ambiente descontraído.",
+									"type": "text",
+									"description": "Descrição detalhada (opcional, máximo 1000 caracteres)"
+								},
+								{
+									"key": "destaque",
+									"value": "Música ao vivo toda sexta-feira!",
+									"type": "text",
+									"description": "Texto de destaque (opcional, máximo 255 caracteres)"
+								},
+								{
 									"key": "horarioFuncionamento",
 									"value": "Seg a Dom - 18h às 02h",
 									"type": "text"
@@ -531,7 +543,7 @@
 								"vida-noturna"
 							]
 						},
-						"description": "Endpoint para cadastrar uma nova opção de vida noturna com upload de imagem"
+						"description": "Endpoint para cadastrar uma nova opção de vida noturna com upload de imagem.\n\nParâmetros:\n- titulo: Título do estabelecimento/evento (obrigatório, máximo 150 caracteres)\n- descricao: Descrição detalhada (opcional, máximo 1000 caracteres)\n- destaque: Texto de destaque (opcional, máximo 255 caracteres)\n- horarioFuncionamento: Horário de funcionamento (obrigatório, máximo 255 caracteres)\n- numeroWhatsapp: Número de WhatsApp (obrigatório, máximo 30 caracteres)\n- linkGoogleMaps: Link do Google Maps (obrigatório, máximo 512 caracteres)\n- imagem: Arquivo de imagem (obrigatório)"
 					},
 					"response": []
 				}
@@ -735,7 +747,7 @@
 								}
 							]
 						},
-						"description": "Endpoint público para obter a previsão completa do tempo. Retorna:\n- Temperatura atual, velocidade dos ventos, índice UV\n- Condições do mar (calmo/agitado)\n- Previsão hora a hora\n- Previsão geral dos próximos 7 dias\n\nParâmetros opcionais:\n- latitude: Latitude da localização (ex: -3.8548 para Fernando de Noronha)\n- longitude: Longitude da localização (ex: -32.4233 para Fernando de Noronha)\n\nSe não informados, usa as coordenadas padrão de Fernando de Noronha.\nDados obtidos da API Open-Meteo."
+						"description": "Endpoint público para obter a previsão completa do tempo. Retorna:\n- Dados atuais: Temperatura, umidade, velocidade dos ventos, direção do vento, índice UV, código e descrição do tempo\n- Condições do mar (calmo/agitado)\n- Previsão hora a hora (incluindo índice UV)\n- Previsão geral dos próximos 7 dias (incluindo índice UV máximo)\n\nParâmetros opcionais:\n- latitude: Latitude da localização (ex: -3.8548 para Fernando de Noronha)\n- longitude: Longitude da localização (ex: -32.4233 para Fernando de Noronha)\n\nSe não informados, usa as coordenadas padrão de Fernando de Noronha.\nDados obtidos da API Open-Meteo."
 					},
 					"response": []
 				},
@@ -769,7 +781,7 @@
 								}
 							]
 						},
-						"description": "Endpoint público para obter apenas os dados meteorológicos atuais:\n- Temperatura atual\n- Velocidade dos ventos\n- Direção do vento\n- Código e descrição do tempo\n\nParâmetros opcionais:\n- latitude: Latitude da localização (ex: -3.8548 para Fernando de Noronha)\n- longitude: Longitude da localização (ex: -32.4233 para Fernando de Noronha)\n\nSe não informados, usa as coordenadas padrão de Fernando de Noronha.\nDados obtidos da API Open-Meteo."
+						"description": "Endpoint público para obter apenas os dados meteorológicos atuais:\n- Temperatura atual\n- Umidade\n- Velocidade dos ventos\n- Direção do vento\n- Índice UV atual\n- Código e descrição do tempo\n\nParâmetros opcionais:\n- latitude: Latitude da localização (ex: -3.8548 para Fernando de Noronha)\n- longitude: Longitude da localização (ex: -32.4233 para Fernando de Noronha)\n\nSe não informados, usa as coordenadas padrão de Fernando de Noronha.\nDados obtidos da API Open-Meteo."
 					},
 					"response": []
 				}

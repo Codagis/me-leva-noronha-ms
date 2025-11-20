@@ -47,6 +47,14 @@ public class VidaNoturna {
     @Column(name = "titulo", nullable = false, length = 150)
     private String titulo;
 
+    @Size(max = 1000)
+    @Column(name = "descricao", length = 1000)
+    private String descricao;
+
+    @Size(max = 255)
+    @Column(name = "destaque", length = 255)
+    private String destaque;
+
     @NotBlank
     @Size(max = 255)
     @Column(name = "horario_funcionamento", nullable = false, length = 255)

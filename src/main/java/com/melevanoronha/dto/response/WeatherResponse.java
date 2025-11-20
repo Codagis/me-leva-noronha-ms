@@ -19,6 +19,7 @@ public record WeatherResponse(
             Double humidity,
             Double windSpeed,
             Integer windDirection,
+            Double uvIndex,
             Integer weatherCode,
             String weatherDescription
     ) {}

@@ -70,6 +70,7 @@ public class WeatherService {
         String url = UriComponentsBuilder.fromHttpUrl(forecastUrl)
                 .queryParam("latitude", latitude)
                 .queryParam("longitude", longitude)
+                .queryParam("current", "temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,uv_index")
                 .queryParam("current_weather", "true")
                 .queryParam("hourly", "temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,uv_index")
                 .queryParam("daily", "temperature_2m_max,temperature_2m_min,relative_humidity_2m_max,relative_humidity_2m_min,uv_index_max")
@@ -77,7 +78,6 @@ public class WeatherService {
                 .queryParam("forecast_days", 7)
                 .toUriString();
 
-        log.debug("Buscando dados de previsão: {}", url);
         return restTemplate.getForObject(url, Map.class);
     }
 
@@ -92,7 +92,6 @@ public class WeatherService {
                     .queryParam("forecast_days", 7)
                     .toUriString();
 
-            log.debug("Buscando dados marinhos: {}", url);
             return restTemplate.getForObject(url, Map.class);
         } catch (Exception e) {
             log.warn("Dados marinhos não disponíveis para esta localização: {}", e.getMessage());
@@ -114,6 +113,7 @@ public class WeatherService {
     private WeatherResponse.CurrentWeather construirCurrentWeather(Map<String, Object> forecastData) {
         Map<String, Object> currentWeather = (Map<String, Object>) forecastData.get("current_weather");
         Map<String, Object> hourly = (Map<String, Object>) forecastData.get("hourly");
+        Map<String, Object> daily = (Map<String, Object>) forecastData.get("daily");
         
         if (currentWeather == null) {
             throw new RuntimeException("Dados meteorológicos atuais não disponíveis");
@@ -126,10 +126,96 @@ public class WeatherService {
         String weatherDescription = obterDescricaoTempo(weatherCode);
 
         Double humidity = null;
+        Double uvIndex = null;
+        
+        Map<String, Object> current = (Map<String, Object>) forecastData.get("current");
+        if (current != null) {
+            humidity = getDoubleValue(current.get("relative_humidity_2m"));
+            uvIndex = getDoubleValue(current.get("uv_index"));
+        }
+        
         if (hourly != null) {
-            List<Double> humidityList = convertToDoubleList(hourly.get("relative_humidity_2m"));
-            if (humidityList != null && !humidityList.isEmpty()) {
-                humidity = humidityList.get(0);
+            List<String> timeList = (List<String>) hourly.get("time");
+            
+            if (humidity == null) {
+                List<Double> humidityList = convertToDoubleList(hourly.get("relative_humidity_2m"));
+                if (humidityList != null && !humidityList.isEmpty()) {
+                    humidity = humidityList.get(0);
+                }
+            }
+            
+            if (uvIndex == null) {
+                List<Double> uvIndexList = convertToDoubleList(hourly.get("uv_index"));
+                if (uvIndexList != null && !uvIndexList.isEmpty() && timeList != null && !timeList.isEmpty()) {
+                    String currentTime = (String) currentWeather.get("time");
+                    if (currentTime != null) {
+                        int index = -1;
+                        for (int i = 0; i < timeList.size(); i++) {
+                            String hourlyTime = timeList.get(i);
+                            if (hourlyTime != null && hourlyTime.equals(currentTime)) {
+                                index = i;
+                                break;
+                            }
+                        }
+                        
+                        if (index >= 0 && index < uvIndexList.size()) {
+                            uvIndex = uvIndexList.get(index);
+                        } else {
+                            String currentHourMinute = currentTime.length() >= 16 ? currentTime.substring(11, 16) : currentTime;
+                            int closestIndex = -1;
+                            int minDiff = Integer.MAX_VALUE;
+                            
+                            for (int i = 0; i < timeList.size(); i++) {
+                                String hourlyTime = timeList.get(i);
+                                if (hourlyTime != null && hourlyTime.length() >= 16) {
+                                    String hourlyHourMinute = hourlyTime.substring(11, 16);
+                                    if (hourlyHourMinute.equals(currentHourMinute)) {
+                                        closestIndex = i;
+                                        break;
+                                    }
+                                    try {
+                                        int currentMinutes = Integer.parseInt(currentHourMinute.substring(0, 2)) * 60 
+                                                              + Integer.parseInt(currentHourMinute.substring(3, 5));
+                                        int hourlyMinutes = Integer.parseInt(hourlyHourMinute.substring(0, 2)) * 60 
+                                                             + Integer.parseInt(hourlyHourMinute.substring(3, 5));
+                                        int diff = Math.abs(currentMinutes - hourlyMinutes);
+                                        if (diff < minDiff) {
+                                            minDiff = diff;
+                                            closestIndex = i;
+                                        }
+                                    } catch (NumberFormatException e) {
+                                    }
+                                }
+                            }
+                            
+                            if (closestIndex >= 0 && closestIndex < uvIndexList.size()) {
+                                uvIndex = uvIndexList.get(closestIndex);
+                            } else {
+                                for (int i = 0; i < Math.min(48, uvIndexList.size()); i++) {
+                                    Double uv = uvIndexList.get(i);
+                                    if (uv != null && uv > 0) {
+                                        uvIndex = uv;
+                                        break;
+                                    }
+                                }
+                                if (uvIndex == null) {
+                                    uvIndex = uvIndexList.get(0);
+                                }
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < Math.min(24, uvIndexList.size()); i++) {
+                            Double uv = uvIndexList.get(i);
+                            if (uv != null && uv > 0) {
+                                uvIndex = uv;
+                                break;
+                            }
+                        }
+                        if (uvIndex == null) {
+                            uvIndex = uvIndexList.get(0);
+                        }
+                    }
+                }
             }
         }
 
@@ -138,6 +224,7 @@ public class WeatherService {
                 humidity,
                 windSpeed,
                 windDirection,
+                uvIndex,
                 weatherCode,
                 weatherDescription
         );

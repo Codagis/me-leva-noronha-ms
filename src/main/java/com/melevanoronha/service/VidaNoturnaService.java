@@ -52,6 +52,8 @@ public class VidaNoturnaService {
     public VidaNoturnaResponse cadastrar(VidaNoturnaRequest request) {
         VidaNoturna vidaNoturna = new VidaNoturna();
         vidaNoturna.setTitulo(request.titulo());
+        vidaNoturna.setDescricao(request.descricao());
+        vidaNoturna.setDestaque(request.destaque());
         vidaNoturna.setHorarioFuncionamento(request.horarioFuncionamento());
         vidaNoturna.setNumeroWhatsapp(request.numeroWhatsapp());
         vidaNoturna.setLinkGoogleMaps(request.linkGoogleMaps());
@@ -68,6 +70,8 @@ public class VidaNoturnaService {
         return new VidaNoturnaResponse(
                 vidaNoturna.getId(),
                 vidaNoturna.getTitulo(),
+                vidaNoturna.getDescricao(),
+                vidaNoturna.getDestaque(),
                 vidaNoturna.getHorarioFuncionamento(),
                 vidaNoturna.getNumeroWhatsapp(),
                 vidaNoturna.getLinkGoogleMaps(),

@@ -42,22 +42,84 @@ CREATE DATABASE "me-leva-noronha";
 
 ### 3. Configure as Variáveis de Ambiente
 
-Edite o arquivo `src/main/resources/application.yml` e ajuste as configurações conforme necessário:
+**⚠️ IMPORTANTE:** Para segurança, todas as credenciais sensíveis devem ser configuradas via variáveis de ambiente. 
 
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/me-leva-noronha
-    username: postgres
-    password: postgres
-    
-jwt:
-  secret: me-leva-noronha-secret-key-minimo-256-bits-para-seguranca-jwt-token-apenas-desenvolvimento
-  expiration: 28800  # 8 horas em segundos
-  refresh-expiration: 604800  # 7 dias em segundos
+#### Opção 1: Usando arquivo .env (Recomendado para desenvolvimento local)
+
+1. Copie o arquivo `env.example` para `.env`:
+   ```bash
+   cp env.example .env
+   ```
+
+2. Edite o arquivo `.env` e configure as variáveis conforme seu ambiente:
+   ```bash
+   # Banco de Dados
+   DB_URL=jdbc:postgresql://localhost:5432/me-leva-noronha
+   DB_USERNAME=postgres
+   DB_PASSWORD=postgres
+   
+   # JWT - ⚠️ Use uma chave secreta forte em produção!
+   JWT_SECRET=sua-chave-secreta-aqui-minimo-256-bits
+   
+   # Flight API (Amadeus)
+   FLIGHT_API_KEY=sua-chave-aqui
+   FLIGHT_API_SECRET=seu-secret-aqui
+   ```
+
+3. Para usar o arquivo `.env` com Spring Boot, você pode usar ferramentas como:
+   - **IntelliJ IDEA**: Configura automaticamente variáveis de ambiente do `.env`
+   - **VS Code**: Use a extensão "DotENV" ou configure manualmente
+   - **Linha de comando**: Use `export $(cat .env | xargs)` antes de executar a aplicação
+
+#### Opção 2: Definir variáveis de ambiente diretamente
+
+**Windows (PowerShell):**
+```powershell
+$env:DB_URL="jdbc:postgresql://localhost:5432/me-leva-noronha"
+$env:DB_USERNAME="postgres"
+$env:DB_PASSWORD="postgres"
+$env:JWT_SECRET="sua-chave-secreta-aqui"
 ```
 
-**⚠️ IMPORTANTE:** Para produção, altere a chave JWT secret para uma chave segura e única. Use variáveis de ambiente para armazenar credenciais sensíveis.
+**Linux/Mac:**
+```bash
+export DB_URL="jdbc:postgresql://localhost:5432/me-leva-noronha"
+export DB_USERNAME="postgres"
+export DB_PASSWORD="postgres"
+export JWT_SECRET="sua-chave-secreta-aqui"
+```
+
+#### Variáveis de Ambiente Disponíveis
+
+**⚠️ OBRIGATÓRIAS (sem valores padrão no código):**
+
+| Variável | Descrição | Obrigatória |
+|----------|-----------|-------------|
+| `DB_URL` | URL de conexão do PostgreSQL | ✅ Sim |
+| `DB_USERNAME` | Usuário do banco de dados | ✅ Sim |
+| `DB_PASSWORD` | Senha do banco de dados | ✅ Sim |
+| `JWT_SECRET` | **Chave secreta para JWT** | ✅ Sim |
+| `FLIGHT_API_KEY` | Chave da API Amadeus | ✅ Sim |
+| `FLIGHT_API_SECRET` | Secret da API Amadeus | ✅ Sim |
+
+**Opcionais (com valores padrão):**
+
+| Variável | Descrição | Padrão |
+|----------|-----------|--------|
+| `JWT_EXPIRATION` | Tempo de expiração do token JWT (segundos) | `28800` (8 horas) |
+| `JWT_REFRESH_EXPIRATION` | Tempo de expiração do refresh token (segundos) | `604800` (7 dias) |
+| `SERVER_PORT` | Porta do servidor | `8080` |
+| `HIBERNATE_DDL_AUTO` | Modo do Hibernate (update/validate/none) | `update` |
+| `HIBERNATE_SHOW_SQL` | Exibir SQL no console | `true` |
+| `SWAGGER_ENABLED` | Habilitar Swagger UI | `true` |
+| `FLIGHT_FALLBACK_PRICE` | Preço padrão quando API falha | `1500.0` |
+
+**⚠️ SEGURANÇA:**
+- **NUNCA** commite o arquivo `.env` no repositório
+- Em **produção**, use variáveis de ambiente do sistema ou ferramentas de gerenciamento de secrets (AWS Secrets Manager, HashiCorp Vault, etc.)
+- Gere uma chave JWT forte em produção: `openssl rand -base64 32`
+- Desabilite o Swagger em produção: `SWAGGER_ENABLED=false`
+- Use `HIBERNATE_DDL_AUTO=validate` ou `none` em produção
 
 ### 4. Compile o Projeto
 

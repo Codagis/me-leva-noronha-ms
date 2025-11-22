@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Sistema Me Leva Noronha
  * @version 1.0
  */
-@Tag(name = "Previsão do Tempo", description = "Endpoints públicos para consulta de previsão do tempo em Fernando de Noronha")
+@Tag(name = "Previsão do Tempo", description = "Endpoints para consulta de previsão do tempo em Fernando de Noronha (requer autenticação)")
 @RequestMapping("/api/weather")
 public interface WeatherControllerInterface {
 

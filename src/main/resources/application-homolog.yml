@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: melevanoronha
+  
+  datasource:
+    url: jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DATABASE}
+    username: ${PG_USER}
+    password: ${PG_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:validate}
+    show-sql: ${HIBERNATE_SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: false
+        use_sql_comments: false
+
+  devtools:
+    restart:
+      enabled: false
+
+server:
+  port: ${PORT:${SERVER_PORT:8080}}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+
+jwt:
+  secret: ${JWT_SECRET:homolog-secret-key-change-in-production-minimum-256-bits}
+  expiration: ${JWT_EXPIRATION:28800}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800}
+
+weather:
+  open-meteo:
+    base-url: ${WEATHER_API_BASE_URL:https://api.open-meteo.com/v1}
+    forecast-url: ${weather.open-meteo.base-url}/forecast
+  location:
+    latitude: ${WEATHER_LATITUDE:-3.8548}
+    longitude: ${WEATHER_LONGITUDE:-32.4233}
+    timezone: ${WEATHER_TIMEZONE:America/Recife}
+
+flight:
+  api:
+    enabled: ${FLIGHT_API_ENABLED:true}
+    base-url: ${FLIGHT_API_BASE_URL:https://api.amadeus.com/v2/shopping/flight-offers}
+    auth-url: ${FLIGHT_API_AUTH_URL:https://api.amadeus.com/v1/security/oauth2/token}
+    key: ${FLIGHT_API_KEY:}
+    secret: ${FLIGHT_API_SECRET:}
+  fallback:
+    price-per-person: ${FLIGHT_FALLBACK_PRICE:1500.0}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: ${SWAGGER_ENABLED:true}
+
+logging:
+  level:
+    root: INFO
+    com.melevanoronha: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

@@ -3,12 +3,12 @@ package com.melevanoronha.controller;
 import com.melevanoronha.controller.interfaces.CalculadoraViagemControllerInterface;
 import com.melevanoronha.dto.request.CalculadoraPassagensRequest;
 import com.melevanoronha.dto.request.CalculadoraViagemRequest;
+import com.melevanoronha.dto.response.AeroportoResponse;
 import com.melevanoronha.dto.response.CalculadoraPassagensResponse;
 import com.melevanoronha.dto.response.CalculadoraViagemResponse;
-import com.melevanoronha.dto.response.CapitalResponse;
 import com.melevanoronha.dto.response.PasseioCalculadoraResponse;
-import com.melevanoronha.enumerator.CapitalBrasileira;
 import com.melevanoronha.enumerator.TipoPasseio;
+import com.melevanoronha.service.AeroportoService;
 import com.melevanoronha.service.CalculadoraViagemService;
 import com.melevanoronha.service.FlightService;
 import jakarta.validation.Valid;
@@ -33,6 +33,7 @@ public class CalculadoraViagemController implements CalculadoraViagemControllerI
 
     private final CalculadoraViagemService calculadoraViagemService;
     private final FlightService flightService;
+    private final AeroportoService aeroportoService;
 
     @Override
     public ResponseEntity<CalculadoraPassagensResponse> calcularPassagens(
@@ -72,9 +73,9 @@ public class CalculadoraViagemController implements CalculadoraViagemControllerI
     }
 
     @Override
-    public ResponseEntity<List<CapitalResponse>> listarCapitais() {
-        List<CapitalResponse> capitais = mapearCapitais();
-        return ResponseEntity.ok(capitais);
+    public ResponseEntity<List<AeroportoResponse>> listarCapitais() {
+        List<AeroportoResponse> aeroportos = aeroportoService.listarTodos();
+        return ResponseEntity.ok(aeroportos);
     }
 
     @Override
@@ -83,18 +84,6 @@ public class CalculadoraViagemController implements CalculadoraViagemControllerI
         return ResponseEntity.ok(passeios);
     }
 
-    private List<CapitalResponse> mapearCapitais() {
-        return Arrays.stream(CapitalBrasileira.values())
-                .map(this::criarCapitalResponse)
-                .toList();
-    }
-
-    private CapitalResponse criarCapitalResponse(CapitalBrasileira capital) {
-        return new CapitalResponse(
-                capital.getNomeCompleto(),
-                capital.getCodigoIATA()
-        );
-    }
 
     private List<PasseioCalculadoraResponse> mapearPasseios() {
         return Arrays.stream(TipoPasseio.values())

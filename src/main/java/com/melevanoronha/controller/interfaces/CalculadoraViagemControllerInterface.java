@@ -2,9 +2,9 @@ package com.melevanoronha.controller.interfaces;
 
 import com.melevanoronha.dto.request.CalculadoraPassagensRequest;
 import com.melevanoronha.dto.request.CalculadoraViagemRequest;
+import com.melevanoronha.dto.response.AeroportoResponse;
 import com.melevanoronha.dto.response.CalculadoraPassagensResponse;
 import com.melevanoronha.dto.response.CalculadoraViagemResponse;
-import com.melevanoronha.dto.response.CapitalResponse;
 import com.melevanoronha.dto.response.PasseioCalculadoraResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -145,15 +145,15 @@ public interface CalculadoraViagemControllerInterface {
     );
 
     @Operation(
-            summary = "Listar capitais brasileiras",
-            description = "Retorna a lista de todas as 26 capitais brasileiras disponíveis como origem da viagem. " +
-                    "Cada capital inclui o nome completo no formato 'Cidade - UF' e o código IATA do aeroporto."
+            summary = "Listar aeroportos brasileiros",
+            description = "Retorna a lista de todos os aeroportos brasileiros disponíveis como origem da viagem. " +
+                    "Cada aeroporto inclui a cidade, nome completo do aeroporto e o código IATA."
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Lista de capitais retornada com sucesso",
-                    content = @Content(schema = @Schema(implementation = CapitalResponse.class))
+                    description = "Lista de aeroportos retornada com sucesso",
+                    content = @Content(schema = @Schema(implementation = AeroportoResponse.class))
             ),
             @ApiResponse(
                     responseCode = "401",
@@ -162,7 +162,7 @@ public interface CalculadoraViagemControllerInterface {
             )
     })
     @GetMapping("/capitais")
-    ResponseEntity<List<CapitalResponse>> listarCapitais();
+    ResponseEntity<List<AeroportoResponse>> listarCapitais();
 
     @Operation(
             summary = "Listar passeios disponíveis",

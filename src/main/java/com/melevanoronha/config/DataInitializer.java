@@ -1,8 +1,10 @@
 package com.melevanoronha.config;
 
+import com.melevanoronha.model.Aeroporto;
 import com.melevanoronha.model.TabuaMare;
 import com.melevanoronha.model.TaxiPreco;
 import com.melevanoronha.model.TaxiTabela;
+import com.melevanoronha.repository.AeroportoRepository;
 import com.melevanoronha.repository.TabelaMareRepository;
 import com.melevanoronha.repository.TaxiPrecoRepository;
 import com.melevanoronha.repository.TaxiTabelaRepository;
@@ -32,6 +34,7 @@ public class DataInitializer implements CommandLineRunner {
     private final TabelaMareRepository tabelaMareRepository;
     private final TaxiPrecoRepository taxiPrecoRepository;
     private final TaxiTabelaRepository taxiTabelaRepository;
+    private final AeroportoRepository aeroportoRepository;
 
     @Override
     @Transactional
@@ -49,6 +52,7 @@ public class DataInitializer implements CommandLineRunner {
         inserirDadosNovembro2025();
         inserirDadosDezembro2025();
         inserirDadosTaxi();
+        inserirDadosAeroportos();
     }
 
     private void inserirDadosJaneiro2025() {
@@ -2455,6 +2459,94 @@ public class DataInitializer implements CommandLineRunner {
             registros.add(taxiPreco);
         } else {
             log.debug("Registro já existe: {} -> {}", origem, destino);
+        }
+    }
+
+    private void inserirDadosAeroportos() {
+        if (aeroportoRepository.count() > 0) {
+            log.info("Aeroportos já existem no banco. Pulando inserção.");
+            return;
+        }
+
+        log.info("Inserindo dados de aeroportos...");
+        List<Aeroporto> aeroportos = new ArrayList<>();
+
+        adicionarAeroporto(aeroportos, "Guarulhos (SP)", "Aeroporto Internacional de São Paulo-Guarulhos", "GRU");
+        adicionarAeroporto(aeroportos, "São Paulo", "Aeroporto de São Paulo-Congonhas", "CGH");
+        adicionarAeroporto(aeroportos, "Brasília", "Aeroporto Internacional de Brasília – Presidente Juscelino Kubitschek", "BSB");
+        adicionarAeroporto(aeroportos, "Rio de Janeiro", "Aeroporto Internacional do Rio de Janeiro-Galeão", "GIG");
+        adicionarAeroporto(aeroportos, "Campinas (SP)", "Aeroporto Internacional de Viracopos/Campinas", "VCP");
+        adicionarAeroporto(aeroportos, "Belo Horizonte (Confins)", "Aeroporto Internacional de Belo Horizonte-Confins", "CNF");
+        adicionarAeroporto(aeroportos, "Recife", "Aeroporto Internacional do Recife/Guararapes – Gilberto Freyre", "REC");
+        adicionarAeroporto(aeroportos, "Salvador", "Aeroporto Internacional de Salvador – Dep. Luís Eduardo Magalhães", "SSA");
+        adicionarAeroporto(aeroportos, "Rio de Janeiro", "Aeroporto Santos Dumont", "SDU");
+        adicionarAeroporto(aeroportos, "Curitiba (São José dos Pinhais)", "Aeroporto Internacional de Curitiba – Afonso Pena", "CWB");
+        adicionarAeroporto(aeroportos, "Fortaleza", "Aeroporto Internacional de Fortaleza – Pinto Martins", "FOR");
+        adicionarAeroporto(aeroportos, "Porto Alegre", "Aeroporto Internacional Salgado Filho", "POA");
+        adicionarAeroporto(aeroportos, "Florianópolis", "Aeroporto Internacional de Florianópolis – Hercílio Luz", "FLN");
+        adicionarAeroporto(aeroportos, "Belém", "Aeroporto Internacional de Belém – Val-de-Cans – Júlio Cezar Ribeiro", "BEL");
+        adicionarAeroporto(aeroportos, "Goiânia", "Aeroporto Internacional de Goiânia – Santa Genoveva", "GYN");
+        adicionarAeroporto(aeroportos, "Vitória", "Aeroporto de Vitória – Eurico de Aguiar Salles", "VIX");
+        adicionarAeroporto(aeroportos, "Manaus", "Aeroporto Internacional de Manaus – Eduardo Gomes", "MAO");
+        adicionarAeroporto(aeroportos, "Cuiabá (Várzea Grande)", "Aeroporto Internacional de Cuiabá – Marechal Rondon", "CGB");
+        adicionarAeroporto(aeroportos, "Maceió (Rio Largo)", "Aeroporto Internacional de Maceió – Zumbi dos Palmares", "MCZ");
+        adicionarAeroporto(aeroportos, "Natal (São Gonçalo do Amarante)", "Aeroporto Internacional de Natal – Aluízio Alves", "NAT");
+        adicionarAeroporto(aeroportos, "São Luís", "Aeroporto Internacional de São Luís – Marechal Cunha Machado", "SLZ");
+        adicionarAeroporto(aeroportos, "João Pessoa (Bayeux)", "Aeroporto Internacional de João Pessoa – Presidente Castro Pinto", "JPA");
+        adicionarAeroporto(aeroportos, "Teresina", "Aeroporto de Teresina – Senador Petrônio Portella", "THE");
+        adicionarAeroporto(aeroportos, "Campo Grande", "Aeroporto Internacional de Campo Grande", "CGR");
+        adicionarAeroporto(aeroportos, "Foz do Iguaçu (PR)", "Aeroporto Internacional de Foz do Iguaçu", "IGU");
+        adicionarAeroporto(aeroportos, "Ribeirão Preto (SP)", "Aeroporto Estadual de Ribeirão Preto – Dr. Leite Lopes", "RAO");
+        adicionarAeroporto(aeroportos, "Aracaju", "Aeroporto Internacional de Aracaju – Santa Maria", "AJU");
+        adicionarAeroporto(aeroportos, "Porto Seguro (BA)", "Aeroporto de Porto Seguro", "BPS");
+        adicionarAeroporto(aeroportos, "Palmas", "Aeroporto de Palmas – Brigadeiro Lysias Rodrigues", "PMW");
+        adicionarAeroporto(aeroportos, "Porto Velho", "Aeroporto Internacional de Porto Velho – Governador Jorge Teixeira de Oliveira", "PVH");
+        adicionarAeroporto(aeroportos, "Rio Branco", "Aeroporto Internacional de Rio Branco – Plácido de Castro", "RBR");
+        adicionarAeroporto(aeroportos, "Uberlândia (MG)", "Aeroporto de Uberlândia – Ten. Cel. Av. César Bombonato", "UDI");
+        adicionarAeroporto(aeroportos, "Navegantes (SC)", "Aeroporto Internacional de Navegantes – Ministro Victor Konder", "NVT");
+        adicionarAeroporto(aeroportos, "Ilhéus (BA)", "Aeroporto de Ilhéus/Bahia-Jorge Amado", "IOS");
+        adicionarAeroporto(aeroportos, "Jericoacoara (CE)", "Aeroporto de Jericoacoara – Comandante Ariston Pessoa", "JJD");
+        adicionarAeroporto(aeroportos, "Montes Claros (MG)", "Aeroporto de Montes Claros/Mário Ribeiro", "MOC");
+        adicionarAeroporto(aeroportos, "Petrolina (PE)", "Aeroporto de Petrolina – Senador Nilo Coelho", "PNZ");
+        adicionarAeroporto(aeroportos, "Boa Vista", "Aeroporto Internacional de Boa Vista – Atlas Brasil Cantanhede", "BVB");
+        adicionarAeroporto(aeroportos, "Macapá", "Aeroporto Internacional de Macapá – Alberto Alcolumbre", "MCP");
+        adicionarAeroporto(aeroportos, "Caxias do Sul (RS)", "Aeroporto Regional de Caxias do Sul – Hugo Cantergiani", "CXJ");
+        adicionarAeroporto(aeroportos, "Presidente Prudente (SP)", "Aeroporto Estadual de Presidente Prudente", "PPB");
+        adicionarAeroporto(aeroportos, "Londrina (PR)", "Aeroporto de Londrina – Governador José Richa", "LDB");
+        adicionarAeroporto(aeroportos, "Maringá (PR)", "Aeroporto Regional de Maringá – Silvio Name Júnior", "MGF");
+        adicionarAeroporto(aeroportos, "Rondonópolis (MT)", "Aeroporto de Rondonópolis – Maestro Marinho Franco", "ROO");
+        adicionarAeroporto(aeroportos, "Bonito (MS)", "Aeroporto Regional de Bonito", "BYO");
+        adicionarAeroporto(aeroportos, "Chapecó (SC)", "Aeroporto de Chapecó – Serafim Enoss Bertaso", "XAP");
+        adicionarAeroporto(aeroportos, "Juazeiro do Norte (CE)", "Aeroporto de Juazeiro do Norte – Orlando Bezerra de Menezes", "JDO");
+        adicionarAeroporto(aeroportos, "Caldas Novas (GO)", "Aeroporto de Caldas Novas", "CLV");
+        adicionarAeroporto(aeroportos, "Imperatriz (MA)", "Aeroporto de Imperatriz – Prefeito Renato Moreira", "IMP");
+        adicionarAeroporto(aeroportos, "Santarém (PA)", "Aeroporto de Santarém – Maestro Wilson Fonseca", "STM");
+        adicionarAeroporto(aeroportos, "Fernando de Noronha (PE)", "Aeroporto de Fernando de Noronha", "FEN");
+        adicionarAeroporto(aeroportos, "Parnaíba (PI)", "Aeroporto Internacional de Parnaíba – Prefeito Doutor João Silva Filho", "PHB");
+        adicionarAeroporto(aeroportos, "Marabá (PA)", "Aeroporto de Marabá – João Corrêa da Rocha", "MAB");
+        adicionarAeroporto(aeroportos, "Barreiras (BA)", "Aeroporto de Barreiras", "BRA");
+        adicionarAeroporto(aeroportos, "Sorocaba (SP)", "Aeroporto de Sorocaba – Bertram Luiz Leupolz", "SOD");
+        adicionarAeroporto(aeroportos, "Bauru (SP)", "Aeroporto Estadual de Bauru/Arealva – Moussa Nakhl Tobias", "JTC");
+        adicionarAeroporto(aeroportos, "Dourados (MS)", "Aeroporto de Dourados – Francisco de Matos Pereira", "DOU");
+        adicionarAeroporto(aeroportos, "Sinop (MT)", "Aeroporto de Sinop – Presidente João Figueiredo", "OPS");
+        adicionarAeroporto(aeroportos, "Tabatinga (AM)", "Aeroporto Internacional de Tabatinga", "TBT");
+        adicionarAeroporto(aeroportos, "Altamira (PA)", "Aeroporto de Altamira", "ATM");
+
+        if (!aeroportos.isEmpty()) {
+            aeroportoRepository.saveAll(aeroportos);
+            log.info("Inseridos {} aeroportos no banco de dados.", aeroportos.size());
+        }
+    }
+
+    private void adicionarAeroporto(List<Aeroporto> aeroportos, String cidade, String nomeAeroporto, String codigoIATA) {
+        if (!aeroportoRepository.existsByCodigoIATA(codigoIATA)) {
+            Aeroporto aeroporto = new Aeroporto();
+            aeroporto.setCidade(cidade);
+            aeroporto.setNomeAeroporto(nomeAeroporto);
+            aeroporto.setCodigoIATA(codigoIATA);
+            aeroportos.add(aeroporto);
+        } else {
+            log.debug("Aeroporto já existe: {} ({})", cidade, codigoIATA);
         }
     }
 }

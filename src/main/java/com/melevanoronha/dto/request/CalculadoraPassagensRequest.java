@@ -8,13 +8,13 @@ import jakarta.validation.constraints.Size;
 /**
  * DTO para requisição de cálculo de passagens aéreas para Fernando de Noronha.
  *
- * @param origem cidade de origem do viajante (formato: "Cidade - UF", ex: "Fortaleza - CE")
+ * @param origem código IATA do aeroporto de origem (ex: "FOR", "GRU", "REC")
  * @param duracaoDias duração da viagem em dias
  * @param numeroPessoas número de pessoas na viagem
  */
 public record CalculadoraPassagensRequest(
-        @NotBlank(message = "Origem é obrigatória")
-        @Size(max = 100, message = "Origem deve ter no máximo 100 caracteres")
+        @NotBlank(message = "Código IATA de origem é obrigatório")
+        @Size(min = 3, max = 3, message = "Código IATA deve ter exatamente 3 caracteres")
         String origem,
 
         @NotNull(message = "Duração em dias é obrigatória")

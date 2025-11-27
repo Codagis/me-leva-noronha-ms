@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * DTO para requisição de cálculo de viagem para Fernando de Noronha.
  *
- * @param origem cidade de origem do viajante
+ * @param origem código IATA do aeroporto de origem (ex: "FOR", "GRU", "REC")
  * @param duracaoDias duração da viagem em dias
  * @param numeroPessoas número de pessoas na viagem
  * @param tipoHospedagem tipo de hospedagem escolhida
@@ -24,8 +24,8 @@ import java.util.List;
  * @param jaTemPassagens indica se o usuário já possui passagens aéreas (se true, o cálculo de passagens será desconsiderado)
  */
 public record CalculadoraViagemRequest(
-        @NotBlank(message = "Origem é obrigatória")
-        @Size(max = 100, message = "Origem deve ter no máximo 100 caracteres")
+        @NotBlank(message = "Código IATA de origem é obrigatório")
+        @Size(min = 3, max = 3, message = "Código IATA deve ter exatamente 3 caracteres")
         String origem,
 
         @NotNull(message = "Duração em dias é obrigatória")

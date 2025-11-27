@@ -1,6 +1,6 @@
 package com.melevanoronha.service;
 
-import com.melevanoronha.enumerator.CapitalBrasileira;
+import com.melevanoronha.service.AeroportoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +49,7 @@ public class FlightService {
     private static final double MULTIPLIER_CENTRO_OESTE_NORTE = 1.4;
 
     private final RestTemplate restTemplate;
+    private final AeroportoService aeroportoService;
 
     @Value("${flight.api.enabled:false}")
     private boolean apiEnabled;
@@ -71,16 +72,16 @@ public class FlightService {
     private String accessToken;
     private long tokenExpirationTime;
 
-    public BigDecimal buscarPrecoPassagens(String origem, Integer numeroPessoas, Integer duracaoDias) {
+    public BigDecimal buscarPrecoPassagens(String codigoIATA, Integer numeroPessoas, Integer duracaoDias) {
         try {
             if (isAmadeusConfigured()) {
-                return buscarPrecoViaAmadeus(origem, numeroPessoas, duracaoDias);
+                return buscarPrecoViaAmadeus(codigoIATA, numeroPessoas, duracaoDias);
             }
             log.info("API Amadeus não configurada, usando valor estimado");
-            return calcularPrecoEstimado(origem, numeroPessoas);
+            return calcularPrecoEstimado(codigoIATA, numeroPessoas);
         } catch (Exception e) {
             log.error("Erro ao buscar preço das passagens: {}", e.getMessage(), e);
-            return calcularPrecoEstimado(origem, numeroPessoas);
+            return calcularPrecoEstimado(codigoIATA, numeroPessoas);
         }
     }
 
@@ -91,34 +92,34 @@ public class FlightService {
             && apiSecret != null && !apiSecret.isEmpty();
     }
 
-    private BigDecimal buscarPrecoViaAmadeus(String origem, Integer numeroPessoas, Integer duracaoDias) {
-        return Optional.ofNullable(CapitalBrasileira.extrairCodigoIATA(origem))
-            .map(codigoOrigem -> {
-                log.info("Buscando passagens de {} ({}) para {} via Amadeus - Duração: {} dias, {} pessoas", 
-                        origem, codigoOrigem, DESTINO_IATA, duracaoDias, numeroPessoas);
-                return obterAccessToken()
-                    .map(token -> {
-                        LocalDate dataIda = LocalDate.now().plusDays(DAYS_AHEAD_DEPARTURE);
-                        LocalDate dataVolta = dataIda.plusDays(duracaoDias);
-                        BigDecimal precoPorPessoa = buscarOfertasVoos(token, codigoOrigem, dataIda, dataVolta);
-                        if (precoPorPessoa != null && precoPorPessoa.compareTo(BigDecimal.ZERO) > 0) {
-                            BigDecimal precoTotal = precoPorPessoa.multiply(BigDecimal.valueOf(numeroPessoas))
-                                    .setScale(2, RoundingMode.HALF_UP);
-                            log.info("Preço por pessoa: R$ {}, Total para {} pessoas: R$ {}", 
-                                    precoPorPessoa, numeroPessoas, precoTotal);
-                            return precoTotal;
-                        }
-                        return null;
-                    })
-                    .orElseGet(() -> {
-                        log.error("Não foi possível obter token de acesso da Amadeus");
-                        return null;
-                    });
+    private BigDecimal buscarPrecoViaAmadeus(String codigoIATA, Integer numeroPessoas, Integer duracaoDias) {
+        if (codigoIATA == null || codigoIATA.isBlank() || codigoIATA.length() != 3) {
+            log.warn("Código IATA inválido: {}. Usando valor estimado.", codigoIATA);
+            return calcularPrecoEstimado(codigoIATA, numeroPessoas);
+        }
+
+        String codigoOrigem = codigoIATA.toUpperCase().trim();
+        log.info("Buscando passagens de {} para {} via Amadeus - Duração: {} dias, {} pessoas", 
+                codigoOrigem, DESTINO_IATA, duracaoDias, numeroPessoas);
+        
+        return obterAccessToken()
+            .map(token -> {
+                LocalDate dataIda = LocalDate.now().plusDays(DAYS_AHEAD_DEPARTURE);
+                LocalDate dataVolta = dataIda.plusDays(duracaoDias);
+                BigDecimal precoPorPessoa = buscarOfertasVoos(token, codigoOrigem, dataIda, dataVolta);
+                if (precoPorPessoa != null && precoPorPessoa.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal precoTotal = precoPorPessoa.multiply(BigDecimal.valueOf(numeroPessoas))
+                            .setScale(2, RoundingMode.HALF_UP);
+                    log.info("Preço por pessoa: R$ {}, Total para {} pessoas: R$ {}", 
+                            precoPorPessoa, numeroPessoas, precoTotal);
+                    return precoTotal;
+                }
+                return null;
             })
             .filter(preco -> preco != null && preco.compareTo(BigDecimal.ZERO) > 0)
             .orElseGet(() -> {
                 log.warn("Nenhuma oferta encontrada ou preço inválido. Usando valor estimado.");
-                return calcularPrecoEstimado(origem, numeroPessoas);
+                return calcularPrecoEstimado(codigoIATA, numeroPessoas);
             });
     }
 
@@ -292,9 +293,16 @@ public class FlightService {
             });
     }
 
-    private BigDecimal calcularPrecoEstimado(String origem, Integer numeroPessoas) {
-        String codigoIATA = CapitalBrasileira.extrairCodigoIATA(origem);
-        double multiplicador = calcularMultiplicadorPorOrigem(origem, codigoIATA);
+    private BigDecimal calcularPrecoEstimado(String codigoIATA, Integer numeroPessoas) {
+        if (codigoIATA == null || codigoIATA.isBlank() || codigoIATA.length() != 3) {
+            log.warn("Código IATA inválido para cálculo estimado: {}. Usando multiplicador padrão.", codigoIATA);
+            double precoPorPessoa = fallbackPricePerPerson * MULTIPLIER_CENTRO_OESTE_NORTE;
+            double total = precoPorPessoa * numeroPessoas;
+            return BigDecimal.valueOf(total).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        String codigo = codigoIATA.toUpperCase().trim();
+        double multiplicador = calcularMultiplicadorPorCodigoIATA(codigo);
         double precoPorPessoa = fallbackPricePerPerson * multiplicador;
         double total = precoPorPessoa * numeroPessoas;
 
@@ -302,57 +310,69 @@ public class FlightService {
             .setScale(2, RoundingMode.HALF_UP);
     }
 
-    private double calcularMultiplicadorPorOrigem(String origem, String codigoIATA) {
-        String origemUpper = origem.toUpperCase();
-
-        if (isRecife(origemUpper, codigoIATA)) {
+    private double calcularMultiplicadorPorCodigoIATA(String codigoIATA) {
+        if ("REC".equals(codigoIATA)) {
             return MULTIPLIER_RECIFE;
         }
 
-        if (isNordeste(origemUpper)) {
+        if (isNordeste(codigoIATA)) {
             return MULTIPLIER_NORDESTE;
         }
 
-        if (isSudeste(origemUpper)) {
+        if (isSudeste(codigoIATA)) {
             return MULTIPLIER_SUDESTE;
         }
 
-        if (isSul(origemUpper)) {
+        if (isSul(codigoIATA)) {
             return MULTIPLIER_SUL;
         }
 
         return MULTIPLIER_CENTRO_OESTE_NORTE;
     }
 
-    private boolean isRecife(String origemUpper, String codigoIATA) {
-        return origemUpper.contains("RECIFE") 
-            || origemUpper.contains("PE") 
-            || "REC".equals(codigoIATA);
+    private boolean isNordeste(String codigoIATA) {
+        return "SSA".equals(codigoIATA)
+            || "NAT".equals(codigoIATA)
+            || "FOR".equals(codigoIATA)
+            || "MCZ".equals(codigoIATA)
+            || "AJU".equals(codigoIATA)
+            || "JPA".equals(codigoIATA)
+            || "SLZ".equals(codigoIATA)
+            || "THE".equals(codigoIATA)
+            || "IOS".equals(codigoIATA)
+            || "JJD".equals(codigoIATA)
+            || "PNZ".equals(codigoIATA)
+            || "BPS".equals(codigoIATA)
+            || "JDO".equals(codigoIATA)
+            || "PHB".equals(codigoIATA)
+            || "BRA".equals(codigoIATA)
+            || "IMP".equals(codigoIATA);
     }
 
-    private boolean isNordeste(String origemUpper) {
-        return origemUpper.contains("NORDESTE")
-            || origemUpper.contains("SALVADOR") || origemUpper.contains("BA")
-            || origemUpper.contains("NATAL") || origemUpper.contains("RN")
-            || origemUpper.contains("FORTALEZA") || origemUpper.contains("CE")
-            || origemUpper.contains("MACEIÓ") || origemUpper.contains("AL")
-            || origemUpper.contains("ARACAJU") || origemUpper.contains("SE")
-            || origemUpper.contains("JOÃO PESSOA") || origemUpper.contains("PB")
-            || origemUpper.contains("SÃO LUÍS") || origemUpper.contains("MA")
-            || origemUpper.contains("TERESINA") || origemUpper.contains("PI");
+    private boolean isSudeste(String codigoIATA) {
+        return "GRU".equals(codigoIATA)
+            || "CGH".equals(codigoIATA)
+            || "VCP".equals(codigoIATA)
+            || "GIG".equals(codigoIATA)
+            || "SDU".equals(codigoIATA)
+            || "CNF".equals(codigoIATA)
+            || "VIX".equals(codigoIATA)
+            || "RAO".equals(codigoIATA)
+            || "SOD".equals(codigoIATA)
+            || "JTC".equals(codigoIATA)
+            || "PPB".equals(codigoIATA);
     }
 
-    private boolean isSudeste(String origemUpper) {
-        return origemUpper.contains("SÃO PAULO") || origemUpper.contains("SP")
-            || origemUpper.contains("RIO") || origemUpper.contains("RJ")
-            || origemUpper.contains("BELO HORIZONTE") || origemUpper.contains("MG")
-            || origemUpper.contains("VITÓRIA") || origemUpper.contains("ES");
-    }
-
-    private boolean isSul(String origemUpper) {
-        return origemUpper.contains("CURITIBA") || origemUpper.contains("PR")
-            || origemUpper.contains("FLORIANÓPOLIS") || origemUpper.contains("SC")
-            || origemUpper.contains("PORTO ALEGRE") || origemUpper.contains("RS");
+    private boolean isSul(String codigoIATA) {
+        return "CWB".equals(codigoIATA)
+            || "FLN".equals(codigoIATA)
+            || "POA".equals(codigoIATA)
+            || "NVT".equals(codigoIATA)
+            || "CXJ".equals(codigoIATA)
+            || "LDB".equals(codigoIATA)
+            || "MGF".equals(codigoIATA)
+            || "XAP".equals(codigoIATA)
+            || "IGU".equals(codigoIATA);
     }
 
     private Double extractPrice(Object priceObj) {

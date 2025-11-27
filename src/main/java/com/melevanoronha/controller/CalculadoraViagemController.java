@@ -73,7 +73,7 @@ public class CalculadoraViagemController implements CalculadoraViagemControllerI
     }
 
     @Override
-    public ResponseEntity<List<AeroportoResponse>> listarCapitais() {
+    public ResponseEntity<List<AeroportoResponse>> listarAeroportos() {
         List<AeroportoResponse> aeroportos = aeroportoService.listarTodos();
         return ResponseEntity.ok(aeroportos);
     }

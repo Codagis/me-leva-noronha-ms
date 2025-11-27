@@ -161,8 +161,8 @@ public interface CalculadoraViagemControllerInterface {
                     content = @Content
             )
     })
-    @GetMapping("/capitais")
-    ResponseEntity<List<AeroportoResponse>> listarCapitais();
+    @GetMapping("/aeroportos")
+    ResponseEntity<List<AeroportoResponse>> listarAeroportos();
 
     @Operation(
             summary = "Listar passeios disponíveis",
